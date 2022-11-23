@@ -649,6 +649,15 @@ class Model:
             raise  ModelParameterException( "Failed to get risk score household")
         return value
 
+    def self_isolate(self, indivIndex, until):
+        value = covid19.intervention_quarantine_until(self.c_model,self.c_model.population[indivIndex],NULL,until,1,NULL,1,0)
+        if value < 0:
+            raise  ModelParameterException( "Failed to isolate individual")
+        return value
+
+    def get_time(self):
+        return self.c_model.time
+
     def add_user_network(
             self, 
             df_network, 
