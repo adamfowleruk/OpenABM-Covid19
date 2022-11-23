@@ -1,4 +1,5 @@
 # For use of the icc compiler
+CPP = g++
 ifeq ($(compiler),icc)
     C = icc
 else
@@ -32,6 +33,7 @@ D=$(shell pwd)
 # Note on Windows: install Rtools for 'sed'
 ifeq ($(shell uname),Darwin)
 	SED_I=sed -i ''
+	CPP = clang++
 	ifndef USE_STATS
     C = clang
 		UNSUPMAC = 1
@@ -49,7 +51,8 @@ ifndef USE_STATS
 	LFLAGS_SCILIB = -lgsl -lgslcblas
 	LDFLAGS_SCILIB = $(shell gsl-config --libs)
 	CFLAGS_SCILIB = $(shell gsl-config --cflags) 
-	CPPFLAGS_SCILIB = 
+# The below is needed for rngcli to compile
+	CPPFLAGS_SCILIB = $(shell gsl-config --cflags) -std=c++17
 else
 	ifndef GSL_COMPAT
 		COMPAT = 
@@ -65,6 +68,7 @@ else
 endif
 
 OBJS = $(OBJS_SCILIB) src/utilities.o src/constant.o src/demographics.o src/params.o src/model.o src/individual.o src/main.o src/input.o src/network.o src/disease.o src/interventions.o src/hospital.o src/doctor.o src/nurse.o src/ward.o src/list.o src/strain.o
+RNGOBJS = $(OBJS_SCILIB) src/random_cli.o
 
 LFLAGS = $(LFLAGS_SCILIB) -lm -O2
 
@@ -106,13 +110,17 @@ dev: install;
 all: $(OBJS)
 	$(C) $(LDFLAGS) -o $(EXE) $(OBJS) $(LFLAGS)
 
+# Just build the Random Number Generator CLI to allow underlying RNG library testing
+rngcli: $(RNGOBJS)
+	$(CPP) $(LDFLAGS) -o rngcli $(RNGOBJS) $(LFLAGS)
+
 clean:
 	cd src && $(PYTHON) -m pip uninstall -y covid19
 	rm -rf $(OBJS) $(EXE) $(SWIG_OUTPUT) $(ROXYGEN_OUTPUT)
 
 # TODO add check if [ ! -d "$(PWD)/stats" ]; then echo "Please check out the stats library with: git clone --depth 1 https://github.com/kthohr/stats"; exit 1; fi
 %.o : %.cpp
-	$(C) $(CPPFLAGS) -c $< -o $@
+	$(CPP) $(CPPFLAGS) -c $< -o $@
 
 .c.o:
 	$(C) $(CFLAGS) -c $< -o $@
