@@ -38,7 +38,7 @@ extern "C" {
 struct generator{
   // Use C++ std::mt19937 with seed of 0 by default (5489u)
 #ifdef GSL_COMPAT
-  std::mt19937 rng; // requires a 1 line change to stats/misc/options.hpp to use mt19937 and not mt19937_64 in order to compile
+  std::mt19937 rng; // set -DSTATS_RNG_ENGINE_TYPE=std::mt19937 to use mt19937 and not mt19937_64 in order to compile
 #else
   std::mt19937_64 rng; // works by default with the stats library
 #endif

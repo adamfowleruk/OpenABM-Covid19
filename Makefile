@@ -57,7 +57,7 @@ else
 	ifndef GSL_COMPAT
 		COMPAT = 
 	else
-		COMPAT = -DGSL_COMPAT
+		COMPAT = -DGSL_COMPAT -DSTATS_RNG_ENGINE_TYPE=std::mt19937
 	endif
 	SRC_SCILIB = src/random_stats.h
 	OBJS_SCILIB = src/random_stats.o

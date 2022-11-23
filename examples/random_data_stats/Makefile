@@ -1,7 +1,8 @@
 CC=g++
 CFLAGS=-c -Wall -I../../src -I../../stats/include -I../../gcem/include -std=c++17
 LDFLAGS= 
-CPPFLAGS=  -DSTATS_ENABLE_STDVEC_WRAPPERS -DSTATS_GO_INLINE -DUSE_STATS=1 -I../../src  -I../../stats/include -I../../gcem/include -std=c++17
+CPPFLAGS=  -DSTATS_ENABLE_STDVEC_WRAPPERS -DSTATS_GO_INLINE -DSTATS_RNG_ENGINE_TYPE=std::mt19937 -DGSL_COMPAT -DUSE_STATS -I../../src  -I../../stats/include -I../../gcem/include -std=c++17
+# CPPFLAGS=  -DSTATS_ENABLE_STDVEC_WRAPPERS -DSTATS_GO_INLINE -DUSE_STATS -I../../src  -I../../stats/include -I../../gcem/include -std=c++17
 LIBS= 
 SOURCES=main.cpp ../../src/random_stats.cpp
 OBJECTS=$(SOURCES:.cpp=.o)

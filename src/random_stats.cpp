@@ -77,6 +77,7 @@ double ran_exponential( generator * gen, double mu ) {
 //       the RNG than GSL does by default, even when specifying float as the input type.
 //       This is a methodological difference which won't result in worse random generation
 //       but may cost in performance terms.
+// TODO determine why this runs 103 times slower than GSL
 unsigned int ran_negative_binomial( generator * gen, double p, double n ) {
   double x = ran_gamma( gen, n, 1.0 );
 #ifdef GSL_COMPAT
@@ -121,11 +122,13 @@ size_t ran_discrete( generator * gen, size_t K, const double *P ) {
 }
 
 // Works the same as GSL
+// TODO determine why this is 3.63 times slower than GSL
 double cdf_gamma_P( double P, double a, double b ) {
   return stats::pgamma(P, a, b);
 }
 
 // Works the same as GSL
+// TODO determine why this is 47 times slower than GSL
 double cdf_gamma_Pinv( double P, double a, double b ) {
   // Inverse of cdf_gamma_P, not the inverse gamma distribution
   return stats::qgamma(P, a, b);
@@ -137,6 +140,7 @@ double cdf_exponential_Pinv( double P, double mu ) {
 }
 
 // Works the same as GSL
+// TODO determine why this is 59 times slower than GSL
 double inv_incomplete_gamma_p( double percentile, long n )
 {
 	if( n < 1 )

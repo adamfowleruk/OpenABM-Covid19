@@ -11,15 +11,15 @@
 	double cpu_time_nsec;
 
 	// Setting number of iterations
-	int n = 10000;
+	int n = 100000;
 
 	// rng uniform, default seed, 99 iterations
 	generator* gen = rng_alloc();
 	start = clock();
 	double result;
-  for (size_t i = 0;i < n; ++i) {
+	for (size_t i = 0;i < 10*n; ++i) {
 		result = rng_uniform(gen);
-    printf("%s,rng_uniform_defaultseed,%ld,,,%12f\n",library,i,result);
+		printf("%s,rng_uniform_defaultseed,%ld,,,%12f\n",library,i,result);
 	}
 	end = clock();
 	cpu_time_nsec = (((double)(end - start)) * 1000000) / CLOCKS_PER_SEC;
@@ -30,9 +30,9 @@
 	gen = rng_alloc();
 	rng_set(gen, 74656);
 	start = clock();
-  for (size_t i = 0;i < n; ++i) {
+	for (size_t i = 0;i < 10*n; ++i) {
 		result = rng_uniform(gen);
-    printf("%s,rng_uniform_74656seed,%ld,,,%12f\n",library,i,result);
+		printf("%s,rng_uniform_74656seed,%ld,,,%12f\n",library,i,result);
 	}
 	end = clock();
 	cpu_time_nsec = (((double)(end - start)) * 1000000) / CLOCKS_PER_SEC;
@@ -43,9 +43,9 @@
 	gen = rng_alloc();
 	int resultint;
 	start = clock();
-  for (size_t i = 1;i < n; ++i) {
-		resultint = rng_uniform_int(gen,i);
-    printf("%s,rng_uniform_int,%ld,,,%d\n",library,i,resultint);
+	for (size_t i = 1;i <= 10*n; ++i) {
+		resultint = rng_uniform_int(gen,10000);
+		printf("%s,rng_uniform_int,%ld,,,%d\n",library,i,resultint);
 	}
 	end = clock();
 	cpu_time_nsec = (((double)(end - start)) * 1000000) / CLOCKS_PER_SEC;
@@ -57,10 +57,12 @@
 	unsigned int resultuint;
 	double indbl = 0.0;
 	start = clock();
-  for (size_t i = 1;i < n; ++i) {
+	for (size_t i = 1;i < 99; ++i) {
 		indbl += 0.01;
-		resultuint = ran_bernoulli(gen,indbl);
-    printf("%s,ran_bernoulli,%f,,,%d\n",library,indbl,resultuint);
+		for (size_t i2 = 0;i2 < n;i2 += 100) {
+			resultuint = ran_bernoulli(gen,indbl);
+			printf("%s,ran_bernoulli,%f,,,%d\n",library,indbl,resultuint);
+		}
 	}
 	end = clock();
 	cpu_time_nsec = (((double)(end - start)) * 1000000) / CLOCKS_PER_SEC;
@@ -87,10 +89,12 @@
 	gen = rng_alloc();
 	indbl = 0.0;
 	start = clock();
-  for (size_t i = 1;i < n; ++i) {
+	for (size_t i = 1;i < 99; ++i) {
 		indbl += 0.01;
-		result = ran_exponential(gen,indbl);
-    printf("%s,ran_exponential,%f,,,%12f\n",library,indbl,result);
+		for (size_t i2 = 0;i2 < n;i2 += 100) {
+			result = ran_exponential(gen,indbl);
+			printf("%s,ran_exponential,%f,,,%12f\n",library,indbl,result);
+		}
 	}
 	end = clock();
 	cpu_time_nsec = (((double)(end - start)) * 1000000) / CLOCKS_PER_SEC;
@@ -108,7 +112,7 @@
 		indbl = 0.0; // reset each iteration
 		for (size_t i = 1;i <= 99; ++i) {
 			indbl += 0.01;
-			for (size_t i2 = 0;i2 < n;++i2) {
+			for (size_t i2 = 0;i2 < n;i2 += 1000) {
 				resultuint = ran_negative_binomial(gen, indbl, n2);
 				printf("%s,ran_negative_binomial,%f,%ld,,%d\n",library,indbl,n2,resultuint);
 			}
@@ -165,8 +169,10 @@
 			p = 0.00;
 			for (size_t i = 1;i <= 99; ++i) {
 				p += 0.01;
-				result = cdf_gamma_P(i, indbl, indbl2);
-				printf("%s,cdf_gamma_P,%ld,%f,%f,%12f\n",library,i,indbl,indbl2,result);
+				for (size_t i2 = 0;i2 < n;i2 += 1600) {
+					result = cdf_gamma_P(i, indbl, indbl2);
+					printf("%s,cdf_gamma_P,%ld,%f,%f,%12f\n",library,i,indbl,indbl2,result);
+				}
 			}
 		}
 	}
@@ -185,7 +191,7 @@
 			p = 0.00;
 			for (size_t i = 1;i <= 99; ++i) {
 				p += 0.01;
-				for (size_t i2 = 0;i2 < n;++i2) {
+				for (size_t i2 = 0;i2 < n;i2 += 2400) {
 					result = cdf_gamma_Pinv(p, indbl, indbl2);
 					printf("%s,cdf_gamma_Pinv_plt0,%f,%f,%f,%12f\n",library,p,indbl,indbl2,result);
 				}
@@ -205,8 +211,10 @@
 		for (size_t b = 1;b <= 5; ++b) {
 			indbl2 = b; // reset each iteration
 			for (size_t i = 1;i <= 99; ++i) {
-				result = cdf_gamma_Pinv(i, indbl, indbl2);
-				printf("%s,cdf_gamma_Pinv_pgt0,%ld,%f,%f,%12f\n",library,i,indbl,indbl2,result);
+				for (size_t i2 = 0;i2 < n;i2 += 2400) {
+					result = cdf_gamma_Pinv(i, indbl, indbl2);
+					printf("%s,cdf_gamma_Pinv_pgt0,%ld,%f,%f,%12f\n",library,i2,indbl,indbl2,result);
+				}
 			}
 		}
 	}
@@ -220,8 +228,10 @@
 		p = 0.00;
 		for (size_t i = 1;i <= 99; ++i) {
 			p += 0.01;
-			result = cdf_exponential_Pinv(p, indbl);
-			printf("%s,cdf_exponential_Pinv,%f,%f,,%12f\n",library,p,indbl,result);
+			for (size_t i2 = 0;i2 < n;i2 += 2000) {
+				result = cdf_exponential_Pinv(p, indbl);
+				printf("%s,cdf_exponential_Pinv,%f,%f,,%12f\n",library,p,indbl,result);
+			}
 		}
 	}
 	end = clock();
@@ -235,7 +245,7 @@
 		p = 0.00;
 		for (size_t i = 1;i <= 99; ++i) {
 			p += 0.01;
-			for (size_t i2 = 0;i2 < n;++i2) {
+			for (size_t i2 = 0;i2 < n;i2 += 1000) {
 				result = inv_incomplete_gamma_p(p, n2);
 				printf("%s,inv_incomplete_gamma_p,%f,%ld,,%12f\n",library,p,n2,result);
 			}
