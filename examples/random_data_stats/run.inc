@@ -126,10 +126,10 @@
 	// ran discrete default seed, i=1-100, K=array of values not adding to p=1.0
 	// generate discrete probabilities multiplied by a factor (to simulate not adding up to p=1)
 	gen = rng_alloc();
-	const size_t K = 10000;
+	const size_t K = 100;
 	double P[K];
-	double multiplier = 80000.0;
-	for (size_t pi = 0;pi < 10000; ++pi) {
+	double multiplier = 800.0;
+	for (size_t pi = 0;pi < 100; ++pi) {
 		P[pi] = multiplier * rng_uniform(gen);
 	}
 	rng_free(gen);
