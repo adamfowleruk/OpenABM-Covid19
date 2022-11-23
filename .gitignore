@@ -118,6 +118,7 @@ sandbox/.ipynb_checkpoints
 
 /src/build
 /*.exe
+/rngcli
 
 # So we don't accidentally check in the stats and gcem modules, if used
 /stats
