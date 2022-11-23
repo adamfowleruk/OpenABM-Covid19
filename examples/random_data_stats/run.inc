@@ -10,11 +10,14 @@
 	clock_t start, end;
 	double cpu_time_nsec;
 
+	// Setting number of iterations
+	int n = 10000;
+
 	// rng uniform, default seed, 99 iterations
 	generator* gen = rng_alloc();
 	start = clock();
 	double result;
-  for (size_t i = 0;i <= 99; ++i) {
+  for (size_t i = 0;i < n; ++i) {
 		result = rng_uniform(gen);
     printf("%s,rng_uniform_defaultseed,%ld,,,%12f\n",library,i,result);
 	}
@@ -27,7 +30,7 @@
 	gen = rng_alloc();
 	rng_set(gen, 74656);
 	start = clock();
-  for (size_t i = 0;i <= 99; ++i) {
+  for (size_t i = 0;i < n; ++i) {
 		result = rng_uniform(gen);
     printf("%s,rng_uniform_74656seed,%ld,,,%12f\n",library,i,result);
 	}
@@ -40,7 +43,7 @@
 	gen = rng_alloc();
 	int resultint;
 	start = clock();
-  for (size_t i = 1;i <= 99; ++i) {
+  for (size_t i = 1;i < n; ++i) {
 		resultint = rng_uniform_int(gen,i);
     printf("%s,rng_uniform_int,%ld,,,%d\n",library,i,resultint);
 	}
@@ -54,7 +57,7 @@
 	unsigned int resultuint;
 	double indbl = 0.0;
 	start = clock();
-  for (size_t i = 1;i <= 99; ++i) {
+  for (size_t i = 1;i < n; ++i) {
 		indbl += 0.01;
 		resultuint = ran_bernoulli(gen,indbl);
     printf("%s,ran_bernoulli,%f,,,%d\n",library,indbl,resultuint);
@@ -67,10 +70,12 @@
 	// random gamma, shape_par(i1) 1-10, scale_par(i2) 1-10
 	gen = rng_alloc();
 	start = clock();
-  for (int i1 = 1;i1 <= 10; ++i1) {
-  	for (int i2 = 1;i2 <= 10; ++i2) {
-			result = ran_gamma(gen,i1,i2);
-			printf("%s,ran_gamma,%d,%d,,%12f\n",library,i1,i2,result);
+	for (int i1 = 1;i1 <= 10; ++i1) {
+		for (int i2 = 1;i2 <= 10; ++i2) {
+			for (size_t i = 0; i < n; ++i) {
+				result = ran_gamma(gen,i1,i2);
+				printf("%s,ran_gamma,%d,%d,,%12f\n",library,i1,i2,result);
+			}
 		}
 	}
 	end = clock();
@@ -82,7 +87,7 @@
 	gen = rng_alloc();
 	indbl = 0.0;
 	start = clock();
-  for (size_t i = 1;i <= 99; ++i) {
+  for (size_t i = 1;i < n; ++i) {
 		indbl += 0.01;
 		result = ran_exponential(gen,indbl);
     printf("%s,ran_exponential,%f,,,%12f\n",library,indbl,result);
@@ -97,15 +102,18 @@
 	gen = rng_alloc();
 	double indbl2 = 0.0;
 	start = clock();
-	for (size_t n = 1;n <= 10001; n += 1000) {
-		indbl2 += 1.0; // increase 'n' which is taken as a double
+	size_t n2 = 5; // hard coded because it's only used for selecting around a mean divided by sd in OpenABM
+//	for (size_t n2 = 1;n2 <= 10001; n2 += 1000) {
+		//indbl2 += 1.0; // increase 'n' which is taken as a double
 		indbl = 0.0; // reset each iteration
 		for (size_t i = 1;i <= 99; ++i) {
 			indbl += 0.01;
-			resultuint = ran_negative_binomial(gen, indbl, indbl2);
-			printf("%s,ran_negative_binomial,%f,%f,,%d\n",library,indbl,indbl2,resultuint);
+			for (size_t i2 = 0;i2 < n;++i2) {
+				resultuint = ran_negative_binomial(gen, indbl, n2);
+				printf("%s,ran_negative_binomial,%f,%ld,,%d\n",library,indbl,n2,resultuint);
+			}
 		}
-	}
+//	}
 	end = clock();
 	cpu_time_nsec = (((double)(end - start)) * 1000000) / CLOCKS_PER_SEC;
 	printf("%s,ran_negative_binomial,,,,%12f\n",library,cpu_time_nsec);
@@ -124,7 +132,7 @@
 	// now use the P array
 	gen = rng_alloc();
 	start = clock();
-	for (size_t i = 1;i <= 100; ++i) {
+	for (size_t i = 1;i <= n; ++i) {
 		resultuint = ran_discrete(gen, K, P);
 		printf("%s,ran_discrete,%ld,,,%d\n",library,i,resultuint);
 	}
@@ -133,10 +141,10 @@
 	printf("%s,ran_discrete,,,,%12f\n",library,cpu_time_nsec);
 	rng_free(gen);
 
-	// Now do random shuffle, ten operations
+	// Now do random shuffle, n operations
 	gen = rng_alloc();
 	start = clock();
-	for (size_t i = 1;i <= 10; ++i) {
+	for (size_t i = 1;i <= n; ++i) {
 		ran_shuffle(gen, P, K, sizeof(double));
 		printf("%s,ran_shuffle,%ld,,,%f\n",library,i,P[0]);
 	}
@@ -177,8 +185,10 @@
 			p = 0.00;
 			for (size_t i = 1;i <= 99; ++i) {
 				p += 0.01;
-				result = cdf_gamma_Pinv(p, indbl, indbl2);
-				printf("%s,cdf_gamma_Pinv_plt0,%f,%f,%f,%12f\n",library,p,indbl,indbl2,result);
+				for (size_t i2 = 0;i2 < n;++i2) {
+					result = cdf_gamma_Pinv(p, indbl, indbl2);
+					printf("%s,cdf_gamma_Pinv_plt0,%f,%f,%f,%12f\n",library,p,indbl,indbl2,result);
+				}
 			}
 		}
 	}
@@ -219,14 +229,16 @@
 	printf("%s,cdf_exponential_Pinv,,,,%12f\n",library,cpu_time_nsec);
 
 
-	// inv_incomplete_gamma_p,n=1 to 1001 step 100, p=0.01-0.99 step 0.01
+	// inv_incomplete_gamma_p,n2=1 to 1001 step 100, p=0.01-0.99 step 0.01
 	start = clock();
-	for (size_t n = 1;n <= 1001; n += 100) {
+	for (size_t n2 = 1;n2 <= 1001; n2 += 100) {
 		p = 0.00;
 		for (size_t i = 1;i <= 99; ++i) {
 			p += 0.01;
-			result = inv_incomplete_gamma_p(p, n);
-			printf("%s,inv_incomplete_gamma_p,%f,%ld,,%12f\n",library,p,n,result);
+			for (size_t i2 = 0;i2 < n;++i2) {
+				result = inv_incomplete_gamma_p(p, n2);
+				printf("%s,inv_incomplete_gamma_p,%f,%ld,,%12f\n",library,p,n2,result);
+			}
 		}
 	}
 	end = clock();

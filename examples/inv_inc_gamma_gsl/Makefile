@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-c -Wall 
-LDFLAGS= 
+CFLAGS=-c -Wall  $(shell gsl-config --cflags) 
+LDFLAGS=  $(shell gsl-config --libs)
 LIBS= -lgsl
 SOURCES=main.c
 OBJECTS=$(SOURCES:.c=.o)

@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-c -Wall -I../../src -pg
-LDFLAGS= -pg
+CFLAGS=-c -Wall -I../../src -pg $(shell gsl-config --cflags) 
+LDFLAGS= -pg $(shell gsl-config --libs)
 LIBS= -lgsl
 SOURCES=main.c ../../src/random_gsl.c
 OBJECTS=$(SOURCES:.c=.o)

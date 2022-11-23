@@ -1,7 +1,7 @@
 CC=g++
-CFLAGS=-c -Wall -I../../stats/include -I../../gcem/include
+CFLAGS=-c -I../../src -I../../stats/include -I../../gcem/include -std=c++17
 LDFLAGS= 
-CPPFLAGS= -I../../stats/include -I../../gcem/include
+CPPFLAGS= -I../../stats/include -I../../gcem/include -std=c++17 -DSTATS_ENABLE_STDVEC_WRAPPERS -DSTATS_GO_INLINE 
 LIBS= 
 SOURCES=main.cpp
 OBJECTS=$(SOURCES:.cpp=.o)

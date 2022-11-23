@@ -2,8 +2,18 @@
 library(ggplot2)
 library(dplyr)
 
+# To run this script you need to build and run the following:-
+# cd examples/random_data_stats
+# make
+# ./randomdatastats > output_stats.csv
+# cd ../random_data_gsl
+# make
+# ./randomdatagsl > output_gsl.csv
+
+# Set the below basedir to the OpenABM-Covid19/examples folder on your system
+
 #basedir <- "D:\\git\\skunkworks\\OpenABM-Covid19\\examples\\inv_inc_gamma_gsl"
-basedir <- "D:\\git\\skunkworks\\OpenABM-Covid19\\examples"
+basedir <- "/Volumes/TB3-1/git/oxford/OpenABM-Covid19/examples"
 
 ## load csv file
 
@@ -24,7 +34,7 @@ baseline$result <- as.numeric(baseline$result)
 
 csvdatafull <- FALSE
 csvdata <- tryCatch({
-  tp <- read.table(paste(basedir , "/random_data_stats/randomdatastats.csv",sep=""), sep=",",header = TRUE)
+  tp <- read.table(paste(basedir , "/random_data_stats/output_stats.csv",sep=""), sep=",",header = TRUE)
   # names: library,test,input1,input2,input3,result
   
   cvsdatafull <- TRUE
@@ -46,12 +56,12 @@ baseline
 timedata
 
 
-#p <- ggplot(timedata, aes(test, result)) +
-#  geom_bar(stat="identity",alpha=0.5, show.legend = F) +
-#  facet_wrap(~ library, scales="free") +
-#  labs(x="Test",
-#       y="Time (nsec)",
-#       title="Time taken per test",
-#       subtitle="By library used")
-#p
+p <- ggplot(timedata, aes(test, result)) +
+  geom_bar(stat="identity",alpha=0.5, show.legend = F) +
+  facet_wrap(~ library, scales="free") +
+  labs(x="Test",
+       y="Time (nsec)",
+       title="Time taken per test",
+       subtitle="By library used")
+p
 #ggsave(paste(basedir,"/test-times.png", sep=""), width = 400, height = 300, units = "mm")
