@@ -307,7 +307,7 @@ int negative_binomial_draw( double mean , double sd )
 		return 0;
 
 	if( mean >= sd * sd )
-		print_exit( "negative binomial distirbution must have mean greater than variance" );
+		print_exit( "negative binomial distribution must have mean greater than variance" );
 
 	p = mean / sd / sd;
 	n = mean * mean / ( sd * sd - mean );
