@@ -191,8 +191,8 @@ class ParameterSet(object):
             Path to CSV file where parameter file should be written
         """
 
-        header = ", ".join(list(self.params.keys()))
-        line = ", ".join(list(self.params.values()))
+        header = ",".join(list(self.params.keys()))
+        line = ",".join(list(self.params.values()))
 
         with open(param_file, "w+") as f:
             f.write(header + "\n" + line)
@@ -220,7 +220,7 @@ class ParameterSet(object):
 
         index_var = "param_id", reset_index = True
         """
-        header = ", ".join(list(self.params.keys()))
+        header = ",".join(list(self.params.keys()))
 
         lines = []
         lines.append(header)
@@ -235,7 +235,7 @@ class ParameterSet(object):
                     self.set_param(index_var, index)
 
             # Create a list of parameter values to save
-            lines.append(", ".join(list(self.params.values())))
+            lines.append(",".join(list(self.params.values())))
             index += 1
 
         with open(output_param_file, "w+") as f:
@@ -275,7 +275,7 @@ class ParameterSet(object):
                 self.set_param(param, value)
 
                 # Save the line
-                line = ", ".join(list(self.params.values()))
+                line = ",".join(list(self.params.values()))
                 lines.append(line)
 
                 # Reset the parameter value

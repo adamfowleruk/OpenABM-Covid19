@@ -10,9 +10,9 @@ Created: April 2020
 Author: Dylan Feldner-Busztin
 """
 
-import subprocess, pytest, os, sys
 import numpy as np, pandas as pd
 from tests import constant
+from tests import utilities as utils
 from parameters import ParameterSet
 
 
@@ -32,9 +32,11 @@ class TestClass(object):
         params.set_param("hospital_on", 1)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model using baseline parameters, pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)     
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        model.write_individual_file()
+        model.write_ward_data()
         
         df_hcw = pd.read_csv(constant.TEST_HCW_FILE)
         df_population = pd.read_csv(constant.TEST_INDIVIDUAL_FILE)
@@ -57,9 +59,10 @@ class TestClass(object):
         params.set_param("end_time", 20)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model using baseline parameters, pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        model.write_interactions_file()
         
         df_interactions = pd.read_csv(constant.TEST_INTERACTION_FILE)
 
@@ -87,9 +90,10 @@ class TestClass(object):
         params.set_param("hospital_on", 1)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model using baseline parameters, pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        model.write_ward_data()
 
         df_hcw = pd.read_csv(constant.TEST_HCW_FILE)
         hcw_idx_list = df_hcw.pdx.values
@@ -108,9 +112,9 @@ class TestClass(object):
         params.set_param("hospital_on", 1)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model using baseline parameters, pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         df_hcw_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
         df_number_beds_exceeded = df_hcw_time_step.query('n_patients > n_beds')
@@ -129,9 +133,9 @@ class TestClass(object):
         params.set_param("hospital_on", 1)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model using baseline parameters, pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         df_hcw_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
         
@@ -160,9 +164,10 @@ class TestClass(object):
         params.set_param("hospital_on", 1)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model using baseline parameters, pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        model.write_transmissions()
 
         df_transmission_output = pd.read_csv(constant.TEST_TRANSMISSION_FILE)
         infected_non_hcw = df_transmission_output["worker_type_recipient"] == constant.NOT_HEALTHCARE_WORKER
@@ -187,9 +192,10 @@ class TestClass(object):
         params.set_param("end_time", 30)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model using baseline parameters, pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        model.write_interactions_file()
 
         list_all_interaction_types = [constant.HOUSEHOLD,
                                     constant.OCCUPATION,

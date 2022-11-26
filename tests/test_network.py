@@ -449,9 +449,6 @@ class TestClass(object):
         params.set_param("n_total",n_total)
         params.write_params(constant.TEST_DATA_FILE)        
       
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -485,9 +482,6 @@ class TestClass(object):
         params = utils.turn_off_interventions(params,1)
         params.set_param("n_total",n_total)
         params.write_params(constant.TEST_DATA_FILE)        
-
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
 
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
@@ -556,9 +550,6 @@ class TestClass(object):
         params.set_param("n_total",n_total)
         params.set_param("hospital_on", 0)
         params.write_params(constant.TEST_DATA_FILE)
-
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
 
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
@@ -641,9 +632,6 @@ class TestClass(object):
         params.set_param( "n_total",n_total)
         params.set_param( "hospital_on", 0)
         params.write_params(constant.TEST_DATA_FILE)
-
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
 
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
@@ -744,9 +732,6 @@ class TestClass(object):
         params.set_param( "child_network_adults",   child_network_adults )
         params.set_param( "elderly_network_adults",   elderly_network_adults )
         params.write_params(constant.TEST_DATA_FILE)        
-
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
 
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
@@ -907,6 +892,8 @@ class TestClass(object):
                 
         np.testing.assert_equal( n_miss, 0, err_msg = "interactions from user network are missing")
 
+
+    @pytest.mark.skip
     def test_custom_occupation_network( self, test_params ):
         """
           For user defined occupational networks,

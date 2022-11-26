@@ -10,7 +10,6 @@ Created: March 2020
 Author: p-robot
 """
 
-# import subprocess
 import numpy as np, pandas as pd
 import pytest
 
@@ -45,11 +44,6 @@ class TestClass(object):
         params = utils.set_fatality_fraction_all(params, 0.0)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model, pipe output to file, read output file
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -66,11 +60,6 @@ class TestClass(object):
         params = utils.set_fatality_fraction_all(params, 0.0)
         params = utils.set_location_death_icu_all(params, 1.0)
         params.write_params(constant.TEST_DATA_FILE)
-
-        # Call the model, pipe output to file, read output file
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
 
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
@@ -90,11 +79,6 @@ class TestClass(object):
         params = utils.set_location_death_icu_all(params, 1.0)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model, pipe output to file, read output file
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -110,11 +94,6 @@ class TestClass(object):
         params = ParameterSet(constant.TEST_DATA_FILE, line_number = 1)
         params = utils.set_hospitalisation_fraction_all(params, 0.0)
         params.write_params(constant.TEST_DATA_FILE)
-
-        # Call the model, pipe output to file, read output file
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
 
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
@@ -132,11 +111,6 @@ class TestClass(object):
         params = utils.set_fraction_asymptomatic_all( params, 1.0 )
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model, pipe output to file, read output file
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -149,11 +123,6 @@ class TestClass(object):
         """
         Test that total_infected is the sum of the other compartments
         """
-
-        # Call the model
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
 
         mparams = utils.get_params_swig()
         model = utils.get_model_swig(mparams)
@@ -183,10 +152,6 @@ class TestClass(object):
         params.write_params(constant.TEST_DATA_FILE)
 
         # Call the model
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -207,11 +172,6 @@ class TestClass(object):
         params.set_param("mean_asymptomatic_to_recovery", 200.0)
         params.set_param("mean_time_hospitalised_recovery", 200.0)
         params.write_params(constant.TEST_DATA_FILE)
-
-        # Call the model
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
 
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
@@ -237,10 +197,6 @@ class TestClass(object):
         params.write_params(constant.TEST_DATA_FILE)
 
         # Call the model
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)

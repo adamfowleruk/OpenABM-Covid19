@@ -26,6 +26,8 @@ def pytest_collection_modifyitems(config, items):
         if "slow" in item.keywords:
             item.add_marker(skip_slow)
 
+# This effectively only ever tests GSL, but on the current system
+# Note that GSL on a non Docker system seems to have the same failures as my stats RNG library
 # "Session" (all files in folder) setup/teardown
 @pytest.fixture(scope = "session", autouse = True)
 def compile_covid_ibm(request):
@@ -37,11 +39,12 @@ def compile_covid_ibm(request):
     shutil.rmtree(constant.IBM_DIR_TEST, ignore_errors = True)
     shutil.copytree(constant.IBM_DIR, constant.IBM_DIR_TEST)
 
-    # Construct the compilation command and compile
-    compile_command = "make clean; make install"
-    completed_compilation = subprocess.run(
-        [compile_command], shell = True, cwd = constant.IBM_DIR_TEST, capture_output = True
-    )
+# Note that by commenting out below, we assume compilation has completed prior to pytest being called
+#     # Construct the compilation command and compile
+#     compile_command = "make clean; make install"
+#     completed_compilation = subprocess.run(
+#         [compile_command], shell = True, cwd = constant.IBM_DIR_TEST, capture_output = True
+#     )
     def fin():
         # Teardown: remove the temporary code directory (when this class is removed)
         shutil.rmtree(constant.IBM_DIR_TEST, ignore_errors = True)

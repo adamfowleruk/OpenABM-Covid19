@@ -12,7 +12,7 @@ Author: Dylan Feldner-Busztin
 
 from parameters import ParameterSet
 from tests import constant
-import subprocess, pytest, os, sys
+from tests import utilities as utils
 import numpy as np, pandas as pd
 
 
@@ -38,10 +38,9 @@ class TestClass(object):
         h_params.set_param("n_beds_covid_icu_ward", 0)
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         df_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
 
@@ -75,10 +74,9 @@ class TestClass(object):
         h_params.set_param("hcw_mean_work_interactions", 0)
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         df_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
 
@@ -107,10 +105,9 @@ class TestClass(object):
         h_params.set_param("hcw_mean_work_interactions", 0)
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         df_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
 
@@ -143,10 +140,10 @@ class TestClass(object):
         h_params.set_param("n_patient_nurse_required_interactions_covid_icu_ward", 0)
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        model.write_interactions_file()
 
         df_interactions = pd.read_csv(constant.TEST_INTERACTION_FILE, comment="#", sep=",", skipinitialspace=True)
 
@@ -180,10 +177,11 @@ class TestClass(object):
         h_params.set_param("max_hcw_daily_interactions", 0)
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        model.write_transmissions()
+        model.write_interactions_file()
 
         df_transmissions_output = pd.read_csv(constant.TEST_TRANSMISSION_FILE)
 
@@ -228,10 +226,9 @@ class TestClass(object):
         h_params.set_param("n_beds_covid_icu_ward", 0)
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
 
         time_step_df = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
@@ -284,10 +281,9 @@ class TestClass(object):
         h_params.set_param("n_beds_covid_icu_ward", 0)
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         time_step_df = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
 
@@ -333,10 +329,9 @@ class TestClass(object):
         h_params.set_param("n_beds_covid_icu_ward", 0)
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         time_step_df = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
 
@@ -380,10 +375,9 @@ class TestClass(object):
         h_params.set_param("n_beds_covid_icu_ward", 20000)
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         time_step_df = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
 
@@ -421,10 +415,10 @@ class TestClass(object):
         h_params.set_param("n_nurses_covid_icu_ward", int((hcw_population_size/4)/n_covid_icu_wards))
         h_params.write_params(constant.TEST_HOSPITAL_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        model.write_interactions_file()
 
         df_interactions = pd.read_csv(constant.TEST_INTERACTION_FILE)
 
@@ -473,10 +467,9 @@ class TestClass(object):
         params.set_param("hospital_on", 1)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         # Get all general doctor
         df_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
@@ -522,10 +515,9 @@ class TestClass(object):
 
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         # Get all general nurses
         df_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
@@ -571,10 +563,9 @@ class TestClass(object):
         params.set_param("hospital_on", 1)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         # Get all icu doctors
         df_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
@@ -622,10 +613,9 @@ class TestClass(object):
         params.set_param("hospital_on", 1)
         params.write_params(constant.TEST_DATA_FILE)
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment="#", sep=",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
 
         # Get all icu nurses
         df_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)

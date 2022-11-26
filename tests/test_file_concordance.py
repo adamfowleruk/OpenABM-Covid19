@@ -36,10 +36,6 @@ class TestClass(object):
         """
         Test incidence between individual file and time series file
         """
-        
-        # Call the model using baseline parameters, pipe output to file, read output file
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
 
         mparams = utils.get_params_swig()
         model = utils.get_model_swig(mparams)
@@ -70,11 +66,6 @@ class TestClass(object):
         Test that total_infected is the sum of the other compartments
         """
         
-        # Call the model
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
         mparams = utils.get_params_swig()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -93,11 +84,6 @@ class TestClass(object):
         Test that all columns of time series file are non-negative
         """
         
-        # Call the model using baseline parameters, pipe output to file, read output file
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-        # df_output = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
         mparams = utils.get_params_swig()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -111,10 +97,6 @@ class TestClass(object):
         events recorded in the transmission file.  
         """
         
-        # Call the model
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-
         mparams = utils.get_params_swig()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -133,9 +115,6 @@ class TestClass(object):
         """
         
         # Call the model
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-
         mparams = utils.get_params_swig()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)

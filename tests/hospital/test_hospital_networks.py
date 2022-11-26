@@ -8,9 +8,8 @@ Created: June 2020
 Author: Kelvin van Vuuren
 """
 
-import pytest, sys, subprocess, shutil, os
+import sys
 import numpy as np, pandas as pd
-from scipy import optimize
 
 sys.path.append("src/COVID19")
 from tests import utilities as utils
@@ -55,9 +54,15 @@ class TestClass(object):
         n_wards = [int(hospital_params.get_param("n_covid_general_wards")), int(hospital_params.get_param("n_covid_icu_wards"))]
         max_hcw_interactions = int(hospital_params.get_param("max_hcw_daily_interactions"))
 
-        # Call the model pipe output to file, read output file
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout=file_output, shell=True)
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        # These should be written throughout the test - only use the below for the FINAL time step data to be written, with CSV header
+        # model.write_hospital_interactions()
+        # model.write_time_step_hospital_data()
+
+        import time
+        time.sleep(60)
 
         df_time_step = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_TIME_STEP)
         df_interactions = pd.read_csv(constant.TEST_OUTPUT_FILE_HOSPITAL_INTERACTIONS)
@@ -114,9 +119,12 @@ class TestClass(object):
         hospital_params = ParameterSet(constant.TEST_HOSPITAL_FILE, line_number = 1)
         hospital_params.set_param( "hcw_mean_work_interactions", 2)
         hospital_params.write_params(constant.TEST_HOSPITAL_FILE)
-
-        file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
+        
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        model.write_individual_file()
+        model.write_interactions_file()
 
         # get all the people, need to hand case if people having zero connections
         df_indiv = pd.read_csv(constant.TEST_INDIVIDUAL_FILE,

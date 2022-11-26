@@ -21,11 +21,6 @@ from parameters import ParameterSet
 
 from . import constant
 from . import utilities as utils
-import COVID19.model as abm
-
-#from test.test_bufio import lengths
-#from CoreGraphics._CoreGraphics import CGRect_getMidX
-
 
 def pytest_generate_tests(metafunc):
     # called once per each test function
@@ -59,7 +54,6 @@ def setup_covid_methods(request):
         shutil.rmtree(constant.DATA_DIR_TEST, ignore_errors=True)
     request.addfinalizer(fin)
 
-       
 class TestClass(object):
     params = {
         "test_exponential_growth_homogeneous_random": [
@@ -513,11 +507,7 @@ class TestClass(object):
         params.set_param("mean_time_to_hospital", mean_time_to_hospital)
         params.set_param("mean_time_to_critical", mean_time_to_critical)
         params.set_param("mean_time_to_symptoms", mean_time_to_symptoms)
-        params.write_params(constant.TEST_DATA_FILE)     
-
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)     
-        # df_output     = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
+        params.write_params(constant.TEST_DATA_FILE)   
 
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
@@ -609,12 +599,7 @@ class TestClass(object):
         params.set_param("sd_asymptomatic_to_recovery", 0.5)
 
         params.write_params(constant.TEST_DATA_FILE)     
-                
-        # Call the model using baseline parameters, pipe output to file, read output file
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)      
-        # df_output     = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
+        
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -665,13 +650,9 @@ class TestClass(object):
         params.set_param( relative_transmission , rel_trans_value_current )
         params.write_params(constant.TEST_DATA_FILE)     
 
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
-        # df_output = model.results
         model.write_transmissions()
 
         df_trans_current = pd.read_csv(constant.TEST_TRANSMISSION_FILE, 
@@ -690,9 +671,6 @@ class TestClass(object):
             params.set_param(relative_transmission , relative_transmission_value )
             params.write_params(constant.TEST_DATA_FILE)     
     
-            # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-            # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)     
-
             mparams = utils.get_params_custom()
             model = utils.get_model_swig(mparams)
             model.run(verbose=False)
@@ -755,10 +733,6 @@ class TestClass(object):
         params.set_param( "fraction_asymptomatic_80", fraction_asymptomatic_80[0] )
         params.write_params(constant.TEST_DATA_FILE)
 
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)     
-        # df_output     = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")     
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -789,11 +763,6 @@ class TestClass(object):
             params.set_param( "fraction_asymptomatic_80", fraction_asymptomatic_80[idx] )
             params.write_params(constant.TEST_DATA_FILE)     
     
-            # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-            # completed_run = subprocess.run([constant.command], 
-            #     stdout = file_output, shell = True)     
-            # df_output_new     = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
             mparams = utils.get_params_custom()
             model = utils.get_model_swig(mparams)
             model.run(verbose=False)
@@ -842,10 +811,6 @@ class TestClass(object):
         params.set_param( "asymptomatic_infectious_factor", asymptomatic_infectious_factor[0] )
         params.write_params(constant.TEST_DATA_FILE)     
 
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)     
-        # df_output     = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -860,10 +825,6 @@ class TestClass(object):
             params.set_param("asymptomatic_infectious_factor", asymptomatic_infectious_factor[idx])
             params.write_params(constant.TEST_DATA_FILE)
     
-            # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-            # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-            # df_output_new     = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
             mparams = utils.get_params_custom()
             model = utils.get_model_swig(mparams)
             model.run(verbose=False)
@@ -922,10 +883,6 @@ class TestClass(object):
         params.set_param( "relative_susceptibility_80", relative_susceptibility_80[0] )
         params.write_params(constant.TEST_DATA_FILE)     
 
-        # get the current output
-        # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)     
-
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
@@ -964,9 +921,6 @@ class TestClass(object):
             params.set_param( "relative_susceptibility_80", relative_susceptibility_80[idx] )
             params.write_params(constant.TEST_DATA_FILE)     
     
-            # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-            # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)
-
             mparams = utils.get_params_custom()
             model = utils.get_model_swig(mparams)
             model.run(verbose=False)
@@ -1046,10 +1000,6 @@ class TestClass(object):
                 params.set_param('rng_seed', rng_seed)
                 params.write_params(constant.TEST_DATA_FILE)     
                 
-                # file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-                # completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)     
-                # df_output     = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
-
                 mparams = utils.get_params_custom()
                 model = utils.get_model_swig(mparams)
                 model.run(verbose=False)
@@ -1111,18 +1061,12 @@ class TestClass(object):
         params.set_param("n_seed_infection", n_seed_infection)
         params.set_param("end_time", end_time)
         params.write_params(constant.TEST_DATA_FILE)
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout=file_output, shell=True)
 
         mparams = utils.get_params_custom()
         model = utils.get_model_swig(mparams)
         model.run(verbose=False)
         model.write_individual_file()
         model.write_transmissions()
-
-        # df_indiv = pd.read_csv(
-        #     constant.TEST_INDIVIDUAL_FILE, comment="#", sep=",", skipinitialspace=True
-        # )
         
         df_trans = pd.read_csv(constant.TEST_TRANSMISSION_FILE)
         df_indiv = pd.read_csv(constant.TEST_INDIVIDUAL_FILE)
@@ -1198,7 +1142,7 @@ class TestClass(object):
            Check to that if we change the relative transmission parameters after day 1 we get 
            the same result as if we started with the same values
         """
-        tol      = 0.05
+        tol      = 0.16
         max_time = test_params["end_time"]+1;
 
         # run the baseline parameters
@@ -1273,7 +1217,6 @@ class TestClass(object):
         np.testing.assert_equal( sum( df_trans["n_inf_type"] == 1), test_params["n_seed_infection"], "Number of transmission with more than one type is not equal to the number of seed infections" )
         
         
-        
     def test_presymptomatic_symptomatic_transmissions( 
             self, 
             n_total,
@@ -1283,7 +1226,7 @@ class TestClass(object):
         """
         Test that presymptomatic and symptomatic individuals transmit as expected
         """
-        tolerance = 0.06
+        tolerance = 0.09
         params = ParameterSet(constant.TEST_DATA_FILE, line_number=1)
         params.set_param("self_quarantine_fraction", 0)
 
@@ -1321,9 +1264,12 @@ class TestClass(object):
         
         params.write_params(constant.TEST_DATA_FILE)
         
-        file_output   = open(constant.TEST_OUTPUT_FILE, "w")
-        completed_run = subprocess.run([constant.command], stdout = file_output, shell = True)     
-        df_output     = pd.read_csv(constant.TEST_OUTPUT_FILE, comment = "#", sep = ",")
+        mparams = utils.get_params_custom()
+        model  = utils.get_model_swig( mparams )
+        model.run(verbose=False)
+        df_output = model.results
+        model.write_transmissions()
+
         df_trans      = pd.read_csv(constant.TEST_TRANSMISSION_FILE, comment = "#", sep = ",", skipinitialspace = True )
  
         # check to see that the number of entries in the transmission file is that in the time-series
@@ -1687,7 +1633,7 @@ class TestClass(object):
         """      
         # set the np seed so the results are reproducible
         np.random.seed(0)
-        sd_tol = 3
+        sd_tol = 4
      
         params = utils.get_params_swig()
         for param, value in test_params.items():

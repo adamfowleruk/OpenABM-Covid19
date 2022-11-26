@@ -7,7 +7,6 @@ Usage:
 @author: anelnurtay
 """
 
-# import subprocess
 import numpy as np, pandas as pd
 import pytest
 import random as rd
@@ -194,11 +193,7 @@ class TestClass(object):
                                   population_30_39, population_40_49, population_50_59,
                                   population_60_69, population_70_79, population_80 ]
        
-        params.write_params(constant.TEST_DATA_FILE)        
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout=file_output,
-        #     stderr=file_output, shell=True)
-        # np.testing.assert_equal(completed_run.returncode, 0)
+        params.write_params(constant.TEST_DATA_FILE)  
 
         # get the model and run for the required time steps
         mparams = utils.get_params_custom()
@@ -245,12 +240,6 @@ class TestClass(object):
         dtype=float)
         household_size_counts_weighted *= float(n_total) / \
         sum(household_size_counts_weighted)
-
-        # Run the simulation.
-        # file_output = open(constant.TEST_OUTPUT_FILE, "w")
-        # completed_run = subprocess.run([constant.command], stdout=file_output,
-        #     stderr=file_output, shell=True)
-        # np.testing.assert_equal(completed_run.returncode, 0)
 
         # get the model and run for the required time steps
         mparams = utils.get_params_custom()

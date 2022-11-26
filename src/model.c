@@ -15,6 +15,7 @@
 #include "interventions.h"
 #include "demographics.h"
 #include "hospital.h"
+#include "input.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -373,7 +374,11 @@ void set_up_occupation_network( model *model )
         model->occupation_network[network]->daily_fraction = model->params->daily_fraction_work;
         model->occupation_network[network]->n_edges = 0;
         strcpy( model->occupation_network[network]->name, params->occupation_network_table->network_names[network] );
-        n_interactions = params->occupation_network_table->mean_interactions[network] / params->daily_fraction_work;
+		if (0 == params->daily_fraction_work) {
+			n_interactions = 0;
+		} else {
+        	n_interactions = params->occupation_network_table->mean_interactions[network] / params->daily_fraction_work;
+		}
 
         if ( n_people > 0 )
         {
@@ -1462,6 +1467,13 @@ int one_time_step( model *model )
 		intervention_smart_release( model );
 
 	model->n_quarantine_days += model->event_lists[QUARANTINED].n_current;
+
+	// Output hospital data for each time step
+	if( model->params->hospital_on )
+	{
+		write_time_step_hospital_data( model );
+		write_hospital_interactions( model);
+	}
 
 	return 1;
 }

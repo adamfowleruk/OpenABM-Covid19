@@ -1605,7 +1605,7 @@ void write_network(char *output_file, network *network_ptr)
 *  Name:        write_hospital_interactions
 *  Description: write interactions that happens within hospital networks
 ******************************************************************************************/
-void write_hospital_interactions( model *model )
+void write_hospital_interactions( model *model, bool force_include_header )
 {
     char output_file_name[INPUT_CHAR_LEN];
     FILE *hospital_interactions_file;
@@ -1626,7 +1626,7 @@ void write_hospital_interactions( model *model )
     day = model->interaction_day_idx;
 
     // Open outputfile in different mode depending on whether this is the first time step
-    if(model->time == 1)
+    if(model->time == 1 || force_include_header)
     {
         hospital_interactions_file = fopen(output_file_name, "w");
         fprintf(hospital_interactions_file,"%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n","time_step","ID_1", "worker_type_1", "ward_type_1", "ward_idx_1", "hospital_state_1","disease_state_1", "interaction_type", "ID_2", "worker_type_2", "ward_type_2", "ward_idx_2", "hospital_state_2", "disease_state_2");
@@ -1694,7 +1694,7 @@ void write_hospital_interactions( model *model )
 *  Name:        write_time_step_hospital_data
 *  Description: write data concerning the status of hospitals at each time step
 ******************************************************************************************/
-void write_time_step_hospital_data( model *model)
+void write_time_step_hospital_data( model *model, bool force_include_header)
 {
     char output_file_name[INPUT_CHAR_LEN];
     FILE *time_step_hospital_file;
@@ -1715,7 +1715,7 @@ void write_time_step_hospital_data( model *model)
             strcat(output_file_name, ".csv");
 
             // Open outputfile in different mode depending on whether this is the first time step
-            if(model->time == 1)
+            if(model->time == 1 || force_include_header)
             {
                 time_step_hospital_file = fopen(output_file_name, "w");
                 fprintf(time_step_hospital_file,"%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", "time_step","ward_idx", "ward_type", "doctor_type", "nurse_type","patient_type","pdx", "hospital_idx","n_patients","n_beds","disease_state","hospital_state","is_working");
