@@ -35,10 +35,9 @@ ifeq ($(shell uname),Darwin)
 	SED_I=sed -i ''
 	CPP = clang++
 	ifndef USE_STATS
-    C = clang
-		UNSUPMAC = 1
+		C = clang
 	else
-    PL = "-undefined dynamic_lookup"
+		PL = "-undefined dynamic_lookup"
 		C = clang++
 	endif
 else
@@ -102,7 +101,7 @@ ROXYGEN_OUTPUT= man/SAFE_UPDATE_PARAMS.Rd man/Parameters.Rd man/Environment.Rd m
 # To compile
 install: $(OBJS)
 install: all;
-	if [ "$(UNSUPMAC)" == "1" ]; then echo "Compilation of OpenABM-Covid19 R and Python bindings with GSL on Mac is unsupported at this time. Please use 'USE_STATS=1 make'"; else cd src && swig -python covid19.i && PYTHONLIB=$(PL) CC=$(C) CXX=$(C) LDSHARED=$(C) D=$(D) $(PYTHON) -m pip install -v $(PIP_FLAGS) . ;fi
+	cd src && swig -python covid19.i && PYTHONLIB=$(PL) CC=$(C) CXX=$(C) LDSHARED=$(C) D=$(D) $(PYTHON) -m pip install -v $(PIP_FLAGS) . 
 
 dev: PIP_FLAGS += -e
 dev: install;

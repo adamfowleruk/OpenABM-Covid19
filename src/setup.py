@@ -32,7 +32,7 @@ def gsl_config(flag):
             return ("-DSTATS_ENABLE_STDVEC_WRAPPERS -DSTATS_GO_INLINE -DUSE_STATS -I" + statsRoot + "/stats/include -I" + statsRoot + "/gcem/include -std=c++17").split(' ')
         else:
             pythonLib = os.environ.get('PYTHONLIB')
-            if pythonLib is not None:
+            if ((pythonLib is not None) & ("" != pythonLib)):
                 return pythonLib.split(' ')
             else:
                 return []
@@ -42,7 +42,9 @@ def gsl_config(flag):
     return out.split(' ')
 
 CFLAGS  = gsl_config('--cflags')
-LDFLAGS = gsl_config('--libs') #+ python_config()
+LDFLAGS = [] + gsl_config('--libs') #+ python_config()
+
+LINKARGS = ["-O2", "-fPIC", "-shared"] + LDFLAGS
 
 srcs = [
     "covid19_wrap.c",
@@ -76,7 +78,7 @@ covid19_module = Extension(
     "_covid19",
     srcs,
     extra_compile_args=["-g", "-Wall", "-fmessage-length=0", "-O2", "-fPIC"] + CFLAGS,
-    extra_link_args=["-O2", "-fPIC", "-shared"] + LDFLAGS,
+    extra_link_args=LINKARGS,
     language=lang,
 )
 
@@ -93,7 +95,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "click",
-        "matplotlib==3.2.2",
+        "matplotlib", # Was ==3.2.2
         "numpy",
         "pandas",
         "scipy",

@@ -1608,12 +1608,12 @@ class Model:
     def print_individual(self, idx):
         covid19.print_individual(self.c_model, idx)
 
-    def write_hospital_interactions(self):
-        covid19.write_hospital_interactions(self.c_model, True)
+    # def write_hospital_interactions(self):
+    #     covid19.write_hospital_interactions(self.c_model, True)
 
-    def write_time_step_hospital_data(self):
-        self.c_params.sys_write_hospital = 1
-        covid19.write_time_step_hospital_data(self.c_model, True)
+    # def write_time_step_hospital_data(self):
+    #     self.c_params.sys_write_hospital = 1
+    #     covid19.write_time_step_hospital_data(self.c_model, True)
 
     def write_ward_data(self):
         covid19.write_ward_data(self.c_model)

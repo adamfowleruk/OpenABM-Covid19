@@ -3111,7 +3111,7 @@ class TestClass(object):
         np.testing.assert_( n_inf_strain_1 > 0, "no vaccinated people have been infected by strain that they should not be protected against")
        
 
-    @pytest.mark.skip
+    @pytest.mark.skip(reason="Final assert equals logic is suspect")
     def test_network_transmission_multiplier(self, test_params, time_off, networks_off ) :   
         """
         Check that a transmission_multipler change applied to a single network 

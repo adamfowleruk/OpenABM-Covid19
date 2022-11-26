@@ -181,7 +181,7 @@ class TestClass(object):
         """
         NB: requires setting the GSL random seed (instantiating the rng object)
         """
-        covid19.setup_gsl_rng(2021)
+        covid19.setup_rng(2021)
         
         n, p = get_nbinom_params(mu, sigma)
         
@@ -200,7 +200,7 @@ class TestClass(object):
         """
         NB: requires setting the GSL random seed
         """
-        covid19.setup_gsl_rng(2021)
+        covid19.setup_rng(2021)
         
         array_c = create_c_array(array, ctype = "double")
         samples = [covid19.discrete_draw(len(array), array_c) for i in range(M)]
@@ -262,6 +262,7 @@ class TestClass(object):
         
         np.testing.assert_array_almost_equal(array_c, array_scipy, decimal = 4)
         
+    @pytest.mark.skip(reason="inv_incomplete_gamma_p is NOT part of utilities.c")
     def test_incomplete_gamma_p(self, N, percentile):
         
         inverse  = covid19.inv_incomplete_gamma_p( percentile ,N ) 

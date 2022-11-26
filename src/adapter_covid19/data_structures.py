@@ -644,7 +644,7 @@ class Scenario:
     new_spending_day: int = 1000
     ccff_day: int = 1000
     loan_guarantee_day: int = 1000
-    model_params: ModelParams = ModelParams()
+    model_params: ModelParams = field(default_factory=ModelParams)
     epidemic_active: bool = True
     # T * percentage. TODO: extend to per sector, region, age
     ill_ratio: Mapping[int, Mapping[Region, float]] = field(default_factory=dict)

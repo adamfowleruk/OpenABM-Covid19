@@ -1686,7 +1686,7 @@ class TestClass(object):
             np.testing.assert_allclose( N_dead_icu, N_icu * fatality_fraction[idx],        atol=std_error_limit * sqrt( N_icu * fatality_fraction[idx] ),     err_msg = "incorrect fatality" )        
             np.testing.assert_allclose( N_dead_icu_1,N_icu_1 * fatality_fraction_1[idx],   atol=std_error_limit * sqrt( N_icu_1 * fatality_fraction_1[idx] ),     err_msg = "incorrect fatality" )        
     
-    @pytest.mark.skip
+    @pytest.mark.skip(reason="Method for calculating ID_source appears suspect")
     def test_multi_strain_infectious_factor(self, test_params):
         """
         Test that the symptom type infectious factors for multiple strains

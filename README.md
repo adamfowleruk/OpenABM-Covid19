@@ -22,8 +22,7 @@ adaptER-covid19, and economics model, is attached to the main OpenABM-Covid19 mo
 Compilation options
 -------------------
 
-You can choose to use the GNU Scientific Library (GSL, GNU GPL licensed) (default) or the Stats library (Apache-2.0 licensed). You can also choose to run the Stats library's random number generator in GSL compatibility mode, although
-this requires a 1 line code change to the stats library's /include/stats_incl/misc/statslib_options.hpp file to use the mt19937 random number generator and not the mt19937_64 generator.
+You can choose to use the GNU Scientific Library (GSL, GNU GPL licensed) (default) or the Stats library (Apache-2.0 licensed). 
 
 To enable the stats library instead of GSL export this symbol before compilation:
 
@@ -31,7 +30,7 @@ To enable the stats library instead of GSL export this symbol before compilation
 export USE_STATS=1
 ```
 
-When using the stats library, you can also choose to stay random number generator compatible with GSL by also exporting the following symbol before compilation:
+When using the stats library, you can also choose to stay random number generator compatible with GSL (uses the mt19937 random number generator and not the mt19937_64 generator) by also exporting the following symbol before compilation:
 
 ```bash
 export GSL_COMPAT=1
@@ -41,7 +40,7 @@ Compilation
 -----------
 
 OpenABM-Covid19 requires a C compiler (such as gcc) and the [GSL](https://www.gnu.org/software/gsl/) libraries installed.
-Using the optional Stats library instead of GSL requires a C++ compiler, such as g++ included with gcc.
+Using the optional Stats library instead of GSL requires a C++ compiler, such as g++ included with gcc. clang++ has also been tested to work on an M1 Mac (Arm64).
 Python installation requires Python 3.7+
 
 ```bash
@@ -114,6 +113,7 @@ settings mentioned above.
 
 1. `examples/inv_inc_gamma_gsl` and `examples/inv_inc_gamma_stats` compare the incomplete inverse gamma solving algorithms of each library
 2. `examples/random_data_gsl` and `examples/random_data_stats` compare every function defined in `random.h` for a variety of inputs. Running these commands and then using a visual text diff programme will show how comparable the results from each library are
+3. `examples/stats-libraries-comparison.ipynb` is a Jupyter Notebook that takes the output of random_data_* test runs from GSL and the Stats library, and compares them at scale. This shows that both libraries provide reliable random number generation.
 
 _____
 
@@ -139,7 +139,7 @@ POSIX platform and Windows require different setups for building the R package.
 
 ### POSIX setup
 
-On MacOS or Linux systems you will then need to generate and run a configure file (this will need installation of `autoconf` such as using Homebrew on MacOS, `brew install autoconf`).
+On MacOS or Linux systems you will then need to generate and run a configure file when using the GSL compilation option (this will need installation of `autoconf` such as using Homebrew on MacOS, `brew install autoconf`).
 
 ```
 autoconf
@@ -156,6 +156,8 @@ This will generate a file `src/Makevars` (ignored by git) which includes the nec
 
 You do not need to generate and run a configure script. R will use `src/Makevar.win` which uses the environment variable `LIB_GSL` to find GSL.
 
+Note that the Stats library option, instead of GSL, has not yet been tested on Windows.
+
 ### All platforms
 
 To build the R package, you first need to generate the SWIG source files:
@@ -164,7 +166,7 @@ To build the R package, you first need to generate the SWIG source files:
 make Rswig
 ```
 
-If you have multiple versions of SWIG installed, you can set the `SWIG3` environment variable to the SWIG 3 executable. Example:
+If you have multiple versions of SWIG installed, you can set the `SWIG3` environment variable to the SWIG 3 (Or Swig 4) executable. Example:
 
 ```
 SWIG3=$(HOME)/swig-3.0.12/bin/swig make Rswig

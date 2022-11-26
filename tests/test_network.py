@@ -893,7 +893,7 @@ class TestClass(object):
         np.testing.assert_equal( n_miss, 0, err_msg = "interactions from user network are missing")
 
 
-    @pytest.mark.skip
+    @pytest.mark.skip(reason="Test appears to be in infinite loop")
     def test_custom_occupation_network( self, test_params ):
         """
           For user defined occupational networks,

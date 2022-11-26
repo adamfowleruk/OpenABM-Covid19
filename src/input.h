@@ -34,8 +34,8 @@ void write_trace_tokens_ts( model*, int );
 void write_quarantine_reasons( model*, parameters *);
 void write_ward_data( model* );
 int get_worker_ward_type( model *pmodel, int pdx );
-void write_time_step_hospital_data( model *pmodel, bool force_include_header = false);
-void write_hospital_interactions(model *pmodel, bool force_include_header = false);
+void write_time_step_hospital_data( model *pmodel);
+void write_hospital_interactions(model *pmodel);
 
 void write_occupation_network(model *, parameters *, int );
 void write_household_network(model *, parameters *);
