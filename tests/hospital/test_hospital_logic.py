@@ -189,7 +189,7 @@ class TestClass(object):
         params.set_param("n_total", 20000)
         params.set_param("n_seed_infection", 1000)
         params.set_param("hospital_on", 1)
-        params.set_param("end_time", 30)
+        params.set_param("end_time", 50)
         params.write_params(constant.TEST_DATA_FILE)
 
         mparams = utils.get_params_custom()

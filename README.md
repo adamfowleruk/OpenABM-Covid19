@@ -59,6 +59,12 @@ For developers, the following installs the Python interface inplace, so modifica
 make dev
 ```
 
+If you are compiling GSL on a Mac and hit issues with the linker not finding Python symbols, then you may have installed anaconda with pyenv. This leads to a broken python linking environment.
+Run the following command, then open a new terminal window prior to running make install:-
+```bash
+conda config --set auto_activate_base false
+```
+
 Usage
 -----
 

@@ -7,6 +7,9 @@ setup.py file for SWIG example
 from distutils.core import setup, Extension
 from subprocess import check_output
 import os
+import re
+
+p = re.compile(".*(3\.[0-9]*).*")
 
 def usingStats():
     useStats = os.environ.get('USE_STATS')
@@ -17,8 +20,19 @@ def usingStats():
 
 # This is recommended, but causes the GSL build to fail in Docker
 def python_config():
-    out = check_output(['python3-config','--ldflags']).decode('utf-8')
+    out = check_output(['python3-config','--libs']).decode('utf-8')
     out = out.replace("\n",'') # cut trailing \n
+    return out.split(' ')
+
+# Required for compiling GSL on the Mac when you use pyenv
+# Mac python3-config DOES NOT include the -lpython3.x library, nor it's include folder!
+def python_prefix():
+    version = check_output(['python3','--version']).decode('utf-8')
+    version = version.replace("\n",'') # cut trailing \n
+    m = p.match(version)
+    out = check_output(['python3-config','--prefix']).decode('utf-8')
+    out = out.replace("\n",'') # cut trailing \n
+    out  = "-L" + out + "/lib -lpython" + m.group(1)
     return out.split(' ')
 
 def gsl_config(flag):
@@ -42,7 +56,7 @@ def gsl_config(flag):
     return out.split(' ')
 
 CFLAGS  = gsl_config('--cflags')
-LDFLAGS = [] + gsl_config('--libs') #+ python_config()
+LDFLAGS = [] + gsl_config('--libs') + python_prefix() # + python_config() 
 
 LINKARGS = ["-O2", "-fPIC", "-shared"] + LDFLAGS
 

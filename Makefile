@@ -48,7 +48,7 @@ ifndef USE_STATS
 	SRC_SCILIB = 
 	OBJS_SCILIB = src/random_gsl.o
 	LFLAGS_SCILIB = -lgsl -lgslcblas
-	LDFLAGS_SCILIB = $(shell gsl-config --libs)
+	LDFLAGS_SCILIB = $(shell gsl-config --libs) $(shell python3-config --ldflags)
 	CFLAGS_SCILIB = $(shell gsl-config --cflags) 
 # The below is needed for rngcli to compile
 	CPPFLAGS_SCILIB = $(shell gsl-config --cflags) -std=c++17

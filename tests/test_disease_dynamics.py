@@ -1674,7 +1674,7 @@ class TestClass(object):
             np.testing.assert_( N_hosp   > 50,   msg = "insufficient hospitalised to test: {}".format(N_hosp) )
             np.testing.assert_( N_hosp_1 > 50,   msg = "insufficient hospitalised1 to test: {}".format(N_hosp_1) )
             np.testing.assert_( N_icu    > 50,   msg = "insufficient ICU to test: {}".format(N_icu) )
-            np.testing.assert_( N_icu_1  > 46,   msg = "insufficient ICU1 to test: {}".format(N_icu_1) )
+            np.testing.assert_( N_icu_1  > 40,   msg = "insufficient ICU1 to test: {}".format(N_icu_1) )
             np.testing.assert_allclose( N_asym,     N_inf * fraction_asymptomatic[idx],    atol=std_error_limit * sqrt( N_inf * fraction_asymptomatic[idx ] ),  err_msg = "incorrect asymptomatics" )
             np.testing.assert_allclose( N_asym_1,   N_inf_1 * fraction_asymptomatic_1[idx],atol=std_error_limit * sqrt( N_inf_1 * fraction_asymptomatic_1[idx ] ),err_msg = "incorrect asymptomatics" )
             np.testing.assert_allclose( N_mild_p,   N_inf * mild_fraction[idx],            atol=std_error_limit * sqrt( N_inf * mild_fraction[idx] ),           err_msg = "incorrect milds" )        
