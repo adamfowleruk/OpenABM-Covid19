@@ -6,6 +6,7 @@
 #include "model.h"
 #include "params.h"
 #include "constant.h"
+#include "contact_event.h"
 #include "input.h"
 #include "individual.h"
 #include "interventions.h"
@@ -23,6 +24,8 @@
 /* These structs shouldn't be used directly (memory is managed by create_model
  * and destroy_model). Ignoring these ctors is necessary to suppress NOTEs
  * from `R CMD check`. */
+%nodefaultctor contact_event;
+%nodefaultdtor contact_event;
 %nodefaultctor directory;
 %nodefaultdtor directory;
 %nodefaultctor edge;
@@ -60,6 +63,7 @@
 %include "disease.h"
 %include "network.h"
 %include "strain.h"
+%include "contact_event.h"
 %include model_utils.i 
 %include params_utils.i
 %include network_utils.i

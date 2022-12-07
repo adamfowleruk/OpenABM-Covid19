@@ -46,6 +46,9 @@ struct model{
 	individual *population;
 	int time;
 
+	contact_event* contact_events;
+	contact_event* last_contact_event;
+
 	interaction_block **interaction_blocks;
 	int interaction_day_idx;
 	long *possible_interactions;

@@ -9,6 +9,8 @@
 #ifndef STRUCTURE_H_
 #define STRUCTURE_H_
 
+typedef struct contact_event contact_event;
+typedef struct contact_events_summary contact_events_summary;
 typedef struct interaction interaction;
 typedef struct interaction_block interaction_block;
 typedef struct infection_event infection_event;

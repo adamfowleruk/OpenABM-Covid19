@@ -23,6 +23,45 @@ class ParameterException(Exception):
 class ModelException(Exception):
     pass
 
+class ContactEvent:
+    infectorId = 0
+    contactId = 0
+    day = 0
+    
+    infectionCaused = False
+    networkId = 0
+    
+    def __init__(self, infectorId, contactId, day, infectionCaused, networkId):
+        self.infectorId = infectorId
+        self.contactId = contactId
+        self.day = day
+        self.infectionCaused = infectionCaused
+        self.networkId = networkId
+        
+    def matches(self, targetDay, infectorId, contactId):
+        return (self.day == targetDay) and (self.infectorId == infectorId) and (self.contactId == contactId)
+    
+    def matchesInfector(self, targetDay, infectorId):
+        return (self.day == targetDay) and (self.infectorId == infectorId)
+    
+    def setInfectionCaused(self, wasInfected):
+        self.infectionCaused = wasInfected
+        
+    def wasInfectionCaused(self):
+        return self.infectionCaused
+    
+    def getDay(self):
+        return self.day
+    
+    def getInfectorId(self):
+        return self.infectorId
+    
+    def getContactId(self):
+        return self.contactId
+
+    def getNetworkId(self):
+        return self.networkId
+
 PYTHON_SAFE_UPDATE_PARAMS = [
     "test_on_symptoms",
     "test_on_traced",
@@ -1023,7 +1062,22 @@ class Model:
                 if ( probability < 0 ) | ( probability > 1 ):
                     raise ParameterException( f"Cross-immunity probability must be in the interval [0,1]")
                 covid19.set_cross_immunity_probability( self.c_model, caught_idx, conferred_idx, probability )
-    
+
+    def get_contact_events(self):
+
+        summary = covid19.get_contact_events( self.c_model )
+        next = summary.first
+
+        events = []
+
+        for idx in range(0,summary.count):
+            newEvent = ContactEvent(next.source_id,next.contact_id,next.day,(1 == next.was_infected),next.network_id)
+            events.append(newEvent)
+
+            next = next.next
+
+        return events
+
     def get_transmissions(self):
         
         n_trans = covid19.get_n_transmissions(self.c_model);

@@ -11,6 +11,7 @@
 #include "individual.h"
 #include "utilities.h"
 #include "constant.h"
+#include "contact_event.h"
 #include "params.h"
 #include "network.h"
 #include "disease.h"
@@ -123,6 +124,8 @@ void transmit_virus_by_type(
 	int rebuild_networks = model->params->rebuild_networks;
 	double *infectious_curve;
 
+	contact_event* ce;
+
 	for( day = model->time-1; day >= max( 0, model->time - MAX_INFECTIOUS_PERIOD ); day-- )
 	{
 		n_infected  = list->n_daily_current[ day];
@@ -169,10 +172,30 @@ void transmit_virus_by_type(
 						hazard_rate   = infectious_curve[ t_infect - 1 ] * infector_mult * network_mult;
 						interaction->individual->hazard[ strain_idx ] -= hazard_rate;
 
+						ce = calloc(1,sizeof(contact_event));
+						ce->source_id = infector->idx;
+						ce->contact_id = interaction->individual->idx;
+						ce->day = day;
+						ce->was_infected = FALSE;
+						ce->network_id = interaction->network_id;
+						ce->next = NULL;
 						if( interaction->individual->hazard[ strain_idx ] < 0 )
 						{
 							new_infection( model, interaction->individual, infector, interaction->network_id, infector->infection_events->strain );
 							interaction->individual->infection_events->infector_network = interaction->type;
+							ce->was_infected = TRUE;
+						}
+						if (NULL == model->contact_events) {
+							model->contact_events = ce;
+							model->last_contact_event = ce;
+						} else {
+							// contact_event* lastce = model->contact_events;
+							// while (NULL != lastce->next) {
+							// 	lastce = lastce->next;
+							// }
+							// lastce->next = ce;
+							model->last_contact_event->next = ce;
+							model->last_contact_event = ce;
 						}
 					}
 					interaction = interaction->next;

@@ -20,6 +20,7 @@ covid19_module = Extension(
     sources=[
         "covid19_wrap.c",
         "constant.c",
+        "contact_event.c",
         "demographics.c",
         "disease.c",
         "doctor.c",

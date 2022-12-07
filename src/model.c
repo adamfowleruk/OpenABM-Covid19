@@ -38,6 +38,8 @@ model* new_model( parameters *params )
 	
 	model_ptr->params = params;
 	model_ptr->time   = 0;
+	model_ptr->contact_events = NULL;
+	model_ptr->last_contact_event = NULL;
 	model_ptr->rebuild_networks = TRUE;
 	model_ptr->user_network = NULL;
 	model_ptr->n_initialised_strains = 0;
