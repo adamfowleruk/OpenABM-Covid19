@@ -128,7 +128,7 @@ void transmit_virus_by_type(
 
 	for( day = model->time-1; day >= max( 0, model->time - MAX_INFECTIOUS_PERIOD ); day-- )
 	{
-		n_infected  = list->n_daily_current[ day];
+		n_infected  = list->n_daily_current[ day ];
 		next_event  = list->events[ day ];
 
 		for( idx = 0; idx < n_infected; idx++ )
@@ -189,11 +189,6 @@ void transmit_virus_by_type(
 							model->contact_events = ce;
 							model->last_contact_event = ce;
 						} else {
-							// contact_event* lastce = model->contact_events;
-							// while (NULL != lastce->next) {
-							// 	lastce = lastce->next;
-							// }
-							// lastce->next = ce;
 							model->last_contact_event->next = ce;
 							model->last_contact_event = ce;
 						}
