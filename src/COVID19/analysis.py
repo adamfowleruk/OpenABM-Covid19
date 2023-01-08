@@ -12,21 +12,37 @@ import math
 class InfectorSummaryNetwork:
     susceptibles = set()
     infected = set()
+    uninfected = set()
 
     def __init__(self):
         self.susceptibles = set()
         self.infected = set()
+        self.uninfected = set()
         
     def addInfection(self,ce):
         self.susceptibles.add(ce.getContactId())
         if ce.wasInfectionCaused():
             self.infected.add(ce.getContactId())
+        else:
+            self.uninfected.add(ce.getContactId())
             
     def getSusceptibleCount(self):
         return len(self.susceptibles)
     
     def getInfectedCount(self):
         return len(self.infected)
+    
+    def getUninfectedCount(self):
+        return len(self.uninfected)
+
+    def getSusceptibleIds(self):
+        return self.susceptibles
+
+    def getInfectedIds(self):
+        return self.infected
+
+    def getUninfectedIds(self):
+        return self.uninfected
     
 
 class InfectorSummary:
@@ -44,7 +60,8 @@ class InfectorSummary:
     def getAllSusceptibleCount(self):
         susCount = 0
         for networkIdStr in self.networkSummaries:
-            susCount += self.networkSummaries[networkIdStr].getSusceptibleCount()
+            # susCount += self.networkSummaries[networkIdStr].getSusceptibleCount()
+            susCount += self.networkSummaries[networkIdStr].getUninfectedCount()
         return susCount
     
     def getAllInfectedCount(self):
@@ -55,7 +72,8 @@ class InfectorSummary:
     
     def getSusceptibleCount(self,networkIdStr):
         if networkIdStr in self.networkSummaries:
-            return self.networkSummaries[networkIdStr].getSusceptibleCount()
+            # return self.networkSummaries[networkIdStr].getSusceptibleCount()
+            return self.networkSummaries[networkIdStr].getUninfectedCount()
         else:
             return 0
     
@@ -70,6 +88,34 @@ class InfectorSummary:
         for networkIdStr in self.networkSummaries:
             networkIds.add(networkIdStr)
         return networkIds
+        
+    def getSusceptibleIds(self,networkIdStr):
+        if networkIdStr in self.networkSummaries:
+            # return self.networkSummaries[networkIdStr].getSusceptibleIds()
+            return self.networkSummaries[networkIdStr].getUninfectedIds()
+        return set()
+        
+    def getInfectedIds(self,networkIdStr):
+        if networkIdStr in self.networkSummaries:
+            return self.networkSummaries[networkIdStr].getInfectedIds()
+        return set()
+        
+    def getAllSusceptibleIds(self):
+        ids = set()
+        for networkIdStr in self.networkSummaries:
+            # tmp = self.networkSummaries[networkIdStr].getSusceptibleIds()
+            tmp = self.networkSummaries[networkIdStr].getUninfectedIds()
+            for id in tmp:
+                ids.add(id)
+        return ids
+        
+    def getAllInfectedIds(self):
+        ids = set()
+        for networkIdStr in self.networkSummaries:
+            tmp = self.networkSummaries[networkIdStr].getInfectedIds()
+            for id in tmp:
+                ids.add(id)
+        return ids
     
 class InfectorList:
     infectors = {} # Dictionary using str(infectorId) -> InfectorSummary()
@@ -90,16 +136,25 @@ class InfectorList:
         # Determine infector set for each number of susceptibles
         infectorsBySusceptibleTotal = {}
         infectorCount = 0
+        allSusceptibles = set()
+        allInfected = set()
         for infectorIdStr in self.infectors:
             # TODO check if it exists, and if not create a new set for Ids under the susceptibleCount in this dict
             susCountStr = str(self.infectors[infectorIdStr].getAllSusceptibleCount())
             if not susCountStr in infectorsBySusceptibleTotal:
                 infectorsBySusceptibleTotal[susCountStr] = set()
             infectorsBySusceptibleTotal[susCountStr].add(infectorIdStr)
+            inf = self.infectors[infectorIdStr].getAllInfectedIds()
+            for id in inf:
+                allInfected.add(id)
+            sus = self.infectors[infectorIdStr].getAllSusceptibleIds()
+            for id in sus:
+                allSusceptibles.add(id)
             if self.infectors[infectorIdStr].getAllInfectedCount() > 0:
                 infectorCount += 1
         # Calculate Rt for each d(m,p) we have in infectorsBySusceptibleTotal
         rt = 0.0
+        atRiskPopulation = len(allSusceptibles) + len(allInfected)
         for countStr in infectorsBySusceptibleTotal:
             count = int(countStr) # This is 'm' from the paper
             if len(self.infectors) != 0: # Shouldn't be possible... but...
@@ -110,7 +165,11 @@ class InfectorList:
                 if infectorCount > 0:
                     prop = infCount / infectorCount # Number who passed on at least one infection per day over those infectors total who had contact with susceptibles on the same day
                 # Now calculate associated probability
-                prob = count * (1.0 - math.exp(-finalTau)) / totalPopulation # Should this be total population or just susceptibles?
+                prob = count * (1.0 - math.exp(-finalTau)) / atRiskPopulation #/ totalPopulation # Should this be total population or just susceptibles?
+
+                # LOOK AT THIS ORDERING OF NUMERATOR AND DEMONINATOR AND EXPLAIN WHERE THE HELL THEY COME FROM
+
+
                 rt += prop * prob
         return rt
     
@@ -121,7 +180,7 @@ class InfectorList:
             infector = self.infectors[infectorIdStr]
             for networkIdStr in infector.getNetworkIds():
                 if not networkIdStr in summaries:
-                    summaries[networkIdStr] = {'infected':0, 'susceptibles':0, 'allInfectors': set(), 'successfulInfectors': set()}
+                    summaries[networkIdStr] = {'infected':0, 'susceptibles':0, 'allInfectors': set(), 'successfulInfectors': set(), 'allInfected': set(), 'allSusceptibles': set()}
                 if not networkIdStr in results:
                     results[networkIdStr] = 0 # Rt initialisation for next loop
                 newInfections = infector.getInfectedCount(networkIdStr)
@@ -130,20 +189,41 @@ class InfectorList:
                     summaries[networkIdStr]["successfulInfectors"].add(infectorIdStr)
                 summaries[networkIdStr]["infected"] += newInfections
                 summaries[networkIdStr]["susceptibles"] += infector.getSusceptibleCount(networkIdStr)
+                sus = infector.getSusceptibleIds(networkIdStr)
+                for id in sus:
+                    summaries[networkIdStr]["allSusceptibles"].add(id)
+                inf = infector.getInfectedIds(networkIdStr)
+                for id in inf:
+                    summaries[networkIdStr]["allInfected"].add(id)
         
         # Perform same as calcRtAllNetworks but do so by networkId
         for networkIdStr in summaries:
-            infected = summaries[networkIdStr]["infected"]
-            sus = summaries[networkIdStr]["susceptibles"]
+            # infected = summaries[networkIdStr]["infected"]
+            # sus = summaries[networkIdStr]["susceptibles"]
+            # infectorCount = len(summaries[networkIdStr]["allInfectors"])
+            # infCount = len(summaries[networkIdStr]["successfulInfectors"])
+            
+            # # Now its the same calculation as before
+            # prop = 0
+            # if infectorCount > 0:
+            #     prop = infCount / infectorCount # Number who passed on at least one infection per day over those infectors total who had contact with susceptibles on the same day
+            # # Now calculate associated probability
+            # prob = sus * (1.0 - math.exp(-finalTau)) / totalPopulation # Should this be total population or just susceptibles?
+            # results[networkIdStr] += prop * prob
+
+            infected = len(summaries[networkIdStr]["allInfected"])
+            sus = len(summaries[networkIdStr]["allSusceptibles"])
             infectorCount = len(summaries[networkIdStr]["allInfectors"])
             infCount = len(summaries[networkIdStr]["successfulInfectors"])
+            networkActivePopulation = infected + sus + infectorCount
+            networkAtRiskThisTurnPopulation = infected + sus
             
             # Now its the same calculation as before
             prop = 0
             if infectorCount > 0:
-                prop = infCount / infectorCount # Number who passed on at least one infection per day over those infectors total who had contact with susceptibles on the same day
+                prop = infCount / infectorCount #/ infectorCount # Number who passed on at least one infection per day over those infectors total who had contact with susceptibles on the same day
             # Now calculate associated probability
-            prob = sus * (1.0 - math.exp(-finalTau)) / totalPopulation # Should this be total population or just susceptibles?
+            prob = sus * (1.0 - math.exp(-finalTau)) / networkAtRiskThisTurnPopulation # Should this be total population or just susceptibles?
             results[networkIdStr] += prop * prob
             
         return results
@@ -305,11 +385,11 @@ class SimulationAnalyser:
             # where N is total number of hosts, X is susceptible hosts
             # from Anderson & May Chapter 4 page 69 (The basic model: statics)
             xBar = 0
-            nBar = 0
-            immuneBar = 0
+            nBar = 0 # Susceptible OR infectious population ONLY (i.e. not recovered, dead, etc.)
+            immuneBar = 0 # Note: NOT par of our nBar population
             infectious = 0
             dmp = 0
-            # TODO should this be AFTER sim step???
+            # Should this be AFTER sim step??? - No, because we'd miss the Day 1 information otherwise
             indivs = underlyingModel.get_individuals()
             for indivId in range(n_total):
                 indivStatus = indivs.current_status[indivId]
@@ -502,8 +582,23 @@ class SimulationAnalyser:
     def getRInstPerDay(self):
         return self.rInstPerDay
 
-    def getMeanDmpPerDay(self):
+    def getRtDmpPerDay(self):
         return self.meanDmpPerDay
 
-    def getDmpByNetwork(self):
+    def getRtDmpOverallMean(self):
+        totalRtDmp = 0.0
+        countRtDmp = 0
+        for rt in self.meanDmpPerDay:
+            if rt > 0:
+                countRtDmp += 1
+                totalRtDmp += rt
+        meanRtDmp = 0
+        if countRtDmp > 0:
+            meanRtDmp = totalRtDmp / countRtDmp
+        return meanRtDmp
+
+    def getRtDmpByNetwork(self):
         return self.networkDayDmp
+
+    def getTauPerDay(self):
+        return self.tauPerDay

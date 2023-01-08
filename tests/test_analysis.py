@@ -41,13 +41,13 @@ class TestClass(object):
         assert "1" in networks, "Missing network ID"
 
         np.testing.assert_equal(infs.getInfectedCount("5"),1,"Wrong infected count")
-        np.testing.assert_equal(infs.getSusceptibleCount("5"),3,"Wrong susceptible count")
+        np.testing.assert_equal(infs.getSusceptibleCount("5"),2,"Wrong susceptible count")
 
         np.testing.assert_equal(infs.getInfectedCount("1"),1,"Wrong infected count")
-        np.testing.assert_equal(infs.getSusceptibleCount("1"),2,"Wrong susceptible count")
+        np.testing.assert_equal(infs.getSusceptibleCount("1"),1,"Wrong susceptible count")
 
         np.testing.assert_equal(infs.getAllInfectedCount(),2,"Wrong infected count")
-        np.testing.assert_equal(infs.getAllSusceptibleCount(),5,"Wrong susceptible count")
+        np.testing.assert_equal(infs.getAllSusceptibleCount(),3,"Wrong susceptible count")
 
     """
     Test basic summariser
@@ -184,3 +184,9 @@ class TestClass(object):
         assert meanDmpPerDay[10]["1"] == 0, "No transmissions"
         assert meanDmpPerDay[11]["5"] == 0, "No transmissions"
         assert meanDmpPerDay[11]["1"] == 0, "No transmissions"
+
+
+
+    # TODO Add a test to verify the proportion of infectious individuals in contact with m susceptible persons is calculated correctly
+
+    
