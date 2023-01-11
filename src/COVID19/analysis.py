@@ -10,24 +10,24 @@ import math
 # Utility classes first
 
 class InfectorSummaryNetwork:
-    susceptibles = set()
+    # susceptibles = set()
     infected = set()
     uninfected = set()
 
     def __init__(self):
-        self.susceptibles = set()
+        # self.susceptibles = set()
         self.infected = set()
         self.uninfected = set()
         
     def addInfection(self,ce):
-        self.susceptibles.add(ce.getContactId())
+        # self.susceptibles.add(ce.getContactId())
         if ce.wasInfectionCaused():
             self.infected.add(ce.getContactId())
         else:
             self.uninfected.add(ce.getContactId())
             
-    def getSusceptibleCount(self):
-        return len(self.susceptibles)
+    # def getSusceptibleCount(self):
+    #     return len(self.susceptibles)
     
     def getInfectedCount(self):
         return len(self.infected)
@@ -35,8 +35,8 @@ class InfectorSummaryNetwork:
     def getUninfectedCount(self):
         return len(self.uninfected)
 
-    def getSusceptibleIds(self):
-        return self.susceptibles
+    # def getSusceptibleIds(self):
+    #     return self.susceptibles
 
     def getInfectedIds(self):
         return self.infected
@@ -150,7 +150,7 @@ class InfectorList:
             sus = self.infectors[infectorIdStr].getAllSusceptibleIds()
             for id in sus:
                 allSusceptibles.add(id)
-            if self.infectors[infectorIdStr].getAllInfectedCount() > 0:
+            if len(inf) > 0:
                 infectorCount += 1
         # Calculate Rt for each d(m,p) we have in infectorsBySusceptibleTotal
         rt = 0.0
@@ -158,12 +158,12 @@ class InfectorList:
         for countStr in infectorsBySusceptibleTotal:
             count = int(countStr) # This is 'm' from the paper
             if len(self.infectors) != 0: # Shouldn't be possible... but...
-                infCount = len(infectorsBySusceptibleTotal[countStr])
+                infectedCount = len(infectorsBySusceptibleTotal[countStr])
 #                 prop = infCount / len(self.infectors)
 #                 prop = infCount / (len(self.infectors) * totalPopulation)
                 prop = 0
-                if infectorCount > 0:
-                    prop = infCount / infectorCount # Number who passed on at least one infection per day over those infectors total who had contact with susceptibles on the same day
+                if infectedCount > 0:
+                    prop = infectorCount / infectedCount # Number who passed on at least one infection per day over those infectors total who had contact with susceptibles on the same day
                 # Now calculate associated probability
                 prob = count * (1.0 - math.exp(-finalTau)) / atRiskPopulation #/ totalPopulation # Should this be total population or just susceptibles?
 
@@ -214,14 +214,14 @@ class InfectorList:
             infected = len(summaries[networkIdStr]["allInfected"])
             sus = len(summaries[networkIdStr]["allSusceptibles"])
             infectorCount = len(summaries[networkIdStr]["allInfectors"])
-            infCount = len(summaries[networkIdStr]["successfulInfectors"])
+            infectedCount = len(summaries[networkIdStr]["successfulInfectors"])
             networkActivePopulation = infected + sus + infectorCount
             networkAtRiskThisTurnPopulation = infected + sus
             
             # Now its the same calculation as before
             prop = 0
-            if infectorCount > 0:
-                prop = infCount / infectorCount #/ infectorCount # Number who passed on at least one infection per day over those infectors total who had contact with susceptibles on the same day
+            if infectedCount > 0:
+                prop = infectorCount / infectedCount # Number who passed on at least one infection per day over those infectors total who had contact with susceptibles on the same day
             # Now calculate associated probability
             prob = sus * (1.0 - math.exp(-finalTau)) / networkAtRiskThisTurnPopulation # Should this be total population or just susceptibles?
             results[networkIdStr] += prop * prob
@@ -237,11 +237,12 @@ class InfectorList:
         return infectorCount
     
     def susceptibleCount(self):
-        susCount = 0
+        # susCount = 0
+        sus = set()
         for infectorIdStr in self.infectors:
-            if self.infectors[infectorIdStr].getAllSusceptibleCount() > 0:
-                susCount += 1
-        return susCount
+            for id in self.infectors[infectorIdStr].getAllSusceptibleIds():
+                sus.add(id)
+        return len(sus)
     
 class InfectorSummariser:
     infectorDays = [] # An array by Day index (0 to days-1)
