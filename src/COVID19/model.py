@@ -11,6 +11,8 @@ from COVID19.network import Network
 from COVID19.vaccine import Vaccine
 from COVID19.strain  import Strain
 
+from pycontactgraph.events import ContactEvent
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -23,44 +25,44 @@ class ParameterException(Exception):
 class ModelException(Exception):
     pass
 
-class ContactEvent:
-    infectorId = 0
-    contactId = 0
-    day = 0
+# class ContactEvent:
+#     infectorId = 0
+#     contactId = 0
+#     day = 0
     
-    infectionCaused = False
-    networkId = 0
+#     infectionCaused = False
+#     networkId = 0
     
-    def __init__(self, infectorId, contactId, day, infectionCaused, networkId):
-        self.infectorId = infectorId
-        self.contactId = contactId
-        self.day = day
-        self.infectionCaused = infectionCaused
-        self.networkId = networkId
+#     def __init__(self, infectorId, contactId, day, infectionCaused, networkId):
+#         self.infectorId = infectorId
+#         self.contactId = contactId
+#         self.day = day
+#         self.infectionCaused = infectionCaused
+#         self.networkId = networkId
         
-    def matches(self, targetDay, infectorId, contactId):
-        return (self.day == targetDay) and (self.infectorId == infectorId) and (self.contactId == contactId)
+#     def matches(self, targetDay, infectorId, contactId):
+#         return (self.day == targetDay) and (self.infectorId == infectorId) and (self.contactId == contactId)
     
-    def matchesInfector(self, targetDay, infectorId):
-        return (self.day == targetDay) and (self.infectorId == infectorId)
+#     def matchesInfector(self, targetDay, infectorId):
+#         return (self.day == targetDay) and (self.infectorId == infectorId)
     
-    def setInfectionCaused(self, wasInfected):
-        self.infectionCaused = wasInfected
+#     def setInfectionCaused(self, wasInfected):
+#         self.infectionCaused = wasInfected
         
-    def wasInfectionCaused(self):
-        return self.infectionCaused
+#     def wasInfectionCaused(self):
+#         return self.infectionCaused
     
-    def getDay(self):
-        return self.day
+#     def getDay(self):
+#         return self.day
     
-    def getInfectorId(self):
-        return self.infectorId
+#     def getInfectorId(self):
+#         return self.infectorId
     
-    def getContactId(self):
-        return self.contactId
+#     def getContactId(self):
+#         return self.contactId
 
-    def getNetworkId(self):
-        return self.networkId
+#     def getNetworkId(self):
+#         return self.networkId
 
 PYTHON_SAFE_UPDATE_PARAMS = [
     "test_on_symptoms",
