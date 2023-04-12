@@ -175,5 +175,6 @@ int add_user_network_random( model*, int, int, long, long*, int*, char* );
 int delete_network( model*, network*n );
 network* get_network_by_id( model*, int );
 int get_network_ids( model*, int* );
+individual* get_individual_by_id( model*, int );
 
 #endif /* MODEL_H_ */

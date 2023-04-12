@@ -1349,6 +1349,19 @@ network* get_network_by_id( model *model, int network_id )
 }
 
 /*****************************************************************************************
+*  Name:		get_individual_by_id
+*  Description: returns a pointer to an individual with a given ID
+*  Returns:		pointer to individual
+******************************************************************************************/
+individual* get_individual_by_id( model *model, int individual_id)
+{
+	// if (individual_id < n_total(model,  )
+		return( &(model->population[ individual_id ]) );
+
+	// return NULL;
+}
+
+/*****************************************************************************************
 *  Name:		get_network_ids
 *  Description: gets all the network ids
 *  				network ids are set on the array pointer
