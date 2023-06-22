@@ -1474,3 +1474,59 @@ int one_time_step( model *model )
 
 	return 1;
 }
+
+
+
+// TODO vary the below based on the compiled in duration risk evaluation desired
+
+// Method 1: Static
+/** Fetches the duration for a given interaction */
+double get_duration( model* model, interaction* interaction ) {
+	return 0.0;
+}
+
+/** Fetches the risk multiplier based on duration (minutes) of an interaction */
+double get_duration_hazard( double duration,model* model, interaction* interaction ) {
+	return 1.0;
+}
+
+
+
+// Method 2: Fitted distribution
+// /** Fetches the duration for a given interaction */
+// double get_duration( model* model, interaction* interaction ) {
+// 	return (1440 * 0.5) * gsl_ran_gamma( rng, 1.0 , 5.0 ); // Should this be the inv PDF?
+// }
+
+// /** Fetches the risk multiplier based on duration (minutes) of an interaction */
+// double get_duration_hazard( double duration, model* model, interaction* interaction ) {
+// 	return gsl_ran_gamma( duration, 1, 1440 ); // Should this be a simpler mapping?
+// }
+// A useful website: https://homepage.divms.uiowa.edu/~mbognar/applets/gamma.html
+
+
+
+// Method 3: Known buckets
+// Note: The numbers here are taken from Ferretti et al 2023 (Nature) and are based
+// on data from the England & Wales Digital Contact Tracing mobile app.
+
+// /** Fetches the duration for a given interaction */
+// double get_duration( model* model, interaction* interaction ) {
+// 	static double cumulative_distribution[] = {
+// 		3.75, 7.5, 15, 30, 60, 120, 240, 360, 720, 1440
+// 	}; // 10 values each representing the next 1/10th likely durations
+// 	return gsl_ran_discrete(rng, cumulative_distribution);
+// }
+
+// /** Fetches the risk multiplier based on duration (minutes) of an interaction */
+// double get_duration_hazard( double duration, model* model, interaction* interaction ) {
+// 	static double transmission_prob[] = {
+// 		30,35,40,45,50,55,60,120,360,720
+// 	}; // 10% chance, 20% chance, and so on
+// 	for (size_t i = 0;i < 10;++i) {
+// 		if (duration <= transmission_prob[i]) {
+// 			return (i + 1.0) / 10.0;
+// 		}
+// 	}
+// 	return 1.0;
+// }

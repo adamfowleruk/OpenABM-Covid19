@@ -177,4 +177,9 @@ network* get_network_by_id( model*, int );
 int get_network_ids( model*, int* );
 individual* get_individual_by_id( model*, int );
 
+/** Fetches the duration for a given interaction */
+double get_duration( model*, interaction* );
+/** Fetches the risk multiplier based on duration (minutes) of an interaction */
+double get_duration_hazard( double, model*, interaction* );
+
 #endif /* MODEL_H_ */

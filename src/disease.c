@@ -116,7 +116,7 @@ void transmit_virus_by_type(
 {
 	long idx, jdx, n_infected, strain_idx;
 	int day, n_interaction, t_infect;
-	double hazard_rate, infector_mult, network_mult;
+	double hazard_rate, infector_mult, infector_progression_mult, network_mult, contact_hazard;
 	event_list *list = &(model->event_lists[type]);
 	event *event, *next_event;
 	interaction *interaction;
@@ -148,6 +148,7 @@ void transmit_virus_by_type(
 				infector_mult = infector->infectiousness_multiplier * infector->infection_events->strain->transmission_multiplier;
 				strain_idx 	  = infector->infection_events->strain->idx;
 				infectious_curve = infector->infection_events->strain->infectious_curve[type];
+				infector_progression_mult = infectious_curve[ t_infect - 1 ];
 
 				for( jdx = 0; jdx < n_interaction; jdx++ )
 				{
@@ -169,8 +170,6 @@ void transmit_virus_by_type(
 						}
 
 						network_mult  = model->all_networks[ interaction->network_id ]->transmission_multiplier_combined;
-						hazard_rate   = infectious_curve[ t_infect - 1 ] * infector_mult * network_mult;
-						interaction->individual->hazard[ strain_idx ] -= hazard_rate;
 
 						ce = calloc(1,sizeof(contact_event));
 						ce->source_id = infector->idx;
@@ -179,6 +178,24 @@ void transmit_virus_by_type(
 						ce->was_infected = FALSE;
 						ce->network_id = interaction->network_id;
 						ce->next = NULL;
+						ce->duration_minutes = 0.0;
+						
+						// Contact hazard calculation
+						// Method 1: Default OpenABM-Covid19 infection model
+						contact_hazard = infector_progression_mult * infector_mult;
+						// Note: The above only needs to be done once, rather than for every interaction
+
+						// Method 2: Based on duration of the contact event only
+						ce->duration_minutes = get_duration(model, interaction); // Select duration from a distribution
+						contact_hazard *= get_duration_hazard(ce->duration_minutes, model, interaction); // Based on duration, the chance of infection
+						// Note we're still multiplying here as total duration is < 24 hours whereas contacts and disease progression can happen every day
+						// Note by default the above returns 0.0 for duration and 1.0 for duration hazard, respectively
+
+						hazard_rate = contact_hazard * network_mult;
+						interaction->individual->hazard[ strain_idx ] -= hazard_rate;
+						ce->risk_threshold = interaction->individual->hazard[ strain_idx ];
+						ce->risk_evaluation = hazard_rate;
+
 						if( interaction->individual->hazard[ strain_idx ] < 0 )
 						{
 							new_infection( model, interaction->individual, infector, interaction->network_id, infector->infection_events->strain );

@@ -26,6 +26,17 @@ struct contact_event{
     long contact_id;
     long day;
 
+    // TODO add strain to this contact event for multi-strain/disease evaluations
+
+    // Theses are INTERNAL model risk evaluations, and not intervention risk evaluation levels
+    double risk_threshold;
+    double risk_evaluation;
+    // Note if risk_evaluation > risk_threshold then was_infected will be true
+
+    // The following are reportable components of the above risk_evaluation value
+    // The following are only set for a duration risk evaluation model
+    double duration_minutes;
+
     // The following are only set if this contact event resulted in a transmission
     int was_infected;
     short network_id;
