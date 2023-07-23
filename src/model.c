@@ -1481,14 +1481,20 @@ int one_time_step( model *model )
 
 // Method 1: Static
 /** Fetches the duration for a given interaction */
-double get_duration( model* model, interaction* interaction ) {
-	return 0.0;
-}
+// double get_duration( model* model, interaction* interaction ) {
+// 	return 0.0;
+// }
 
-/** Fetches the risk multiplier based on duration (minutes) of an interaction */
-double get_duration_hazard( double duration,model* model, interaction* interaction ) {
-	return 1.0;
-}
+// /** Fetches the risk multiplier based on duration (minutes) of an interaction */
+// double get_duration_hazard( double duration,model* model, interaction* interaction ) {
+// 	return 1.0;
+// }
+// For a default OpenABM-Covid19 simulation over 200 days with 10000 people:-
+// duration_hazard => total_infected (at 200 days)
+// 0.5 => 5153
+// 1.0 => 8562 <= We should aim to replicate this to indicate similar infection risk in total
+// 1.5 => 9371
+
 
 
 
@@ -1510,23 +1516,45 @@ double get_duration_hazard( double duration,model* model, interaction* interacti
 // Note: The numbers here are taken from Ferretti et al 2023 (Nature) and are based
 // on data from the England & Wales Digital Contact Tracing mobile app.
 
-// /** Fetches the duration for a given interaction */
-// double get_duration( model* model, interaction* interaction ) {
-// 	static double cumulative_distribution[] = {
-// 		3.75, 7.5, 15, 30, 60, 120, 240, 360, 720, 1440
-// 	}; // 10 values each representing the next 1/10th likely durations
-// 	return gsl_ran_discrete(rng, cumulative_distribution);
-// }
+/** Fetches the duration for a given interaction */
+double get_duration( model* model, interaction* interaction ) {
+	static double cumulative_distribution[] = {
+		// 3.75, 7.5, 15, 30, 60, 120, 240, 360, 720, 1440
+		0.0,1.2,2.4,3.5999999999999996,4.8,6.0,7.199999999999999,8.4,9.6,10.799999999999999,
+		12.0,13.2,14.399999999999999,15.6,16.8,18.0,19.2,20.4,21.599999999999998,22.8,
+		24.0,25.2,26.4,27.599999999999998,28.799999999999997,30.0,31.2,32.4,33.6,34.8,
+		36.0,37.199999999999996,38.4,39.6,40.8,42.0,43.199999999999996,44.4,45.6,46.8,
+		48.0,49.199999999999996,50.4,51.6,52.8,54.0,55.199999999999996,56.4,57.599999999999994,58.8,
+		60.0,61.76470588235294,63.529411764705884,65.29411764705883,67.05882352941177,68.82352941176471,70.58823529411765,72.35294117647058,74.11764705882354,75.88235294117646,
+		77.64705882352942,79.41176470588235,81.17647058823529,82.94117647058823,84.70588235294117,86.47058823529412,88.23529411764706,90.0,93.33333333333333,96.66666666666667,
+		100.0,103.33333333333333,106.66666666666667,110.0,113.33333333333334,116.66666666666667,120.0,127.5,135.0,142.5,
+		150.0,160.0,170.0,180.0,195.0,210.0,225.0,240,270,300,
+		330,360,420,480,540,660,810,1020,1200,1440
+		// duration data at 1% resolution (100 values)
+		// household between 8hr and 24 hr
+		// contacts over multiple working days (Mon -> Fri), but less than 8 hrs OR single day but > 4 hrs => Occupation
+		// contacts that are less than 4 hrs but single day => Random
+	}; // 99 values each representing the next 1/99th likely durations
+	return uniform_draw(100, cumulative_distribution);
+}
 
-// /** Fetches the risk multiplier based on duration (minutes) of an interaction */
-// double get_duration_hazard( double duration, model* model, interaction* interaction ) {
-// 	static double transmission_prob[] = {
-// 		30,35,40,45,50,55,60,120,360,720
-// 	}; // 10% chance, 20% chance, and so on
-// 	for (size_t i = 0;i < 10;++i) {
-// 		if (duration <= transmission_prob[i]) {
-// 			return (i + 1.0) / 10.0;
-// 		}
-// 	}
-// 	return 1.0;
-// }
+/** Fetches the risk multiplier based on duration (minutes) of an interaction */
+double get_duration_hazard( double duration, model* model, interaction* interaction ) {
+	static double transmission_prob[] = {
+		// 30,35,40,45,50,55,60,120,360,720 // should skew to longer contacts are majority of transmissions => 6407 cases
+		// 3.75, 7.5, 15, 30, 60, 120, 240, 360, 720, 1440 // should average out to the same numbers of cases => actually 7546 total cases
+		2.142857142857143,4.285714285714286,6.428571428571429,8.571428571428571,10.714285714285714,12.857142857142858,15.0,17.142857142857142,19.285714285714285,
+		21.428571428571427,23.57142857142857,25.714285714285715,27.857142857142858,30.0,32.14285714285714,34.285714285714285,36.42857142857143,38.57142857142857,40.714285714285715,
+		42.857142857142854,45.0,47.14285714285714,49.285714285714285,51.42857142857143,53.57142857142857,55.714285714285715,57.857142857142854,60.0,62.30769230769231,
+		64.61538461538461,66.92307692307692,69.23076923076923,71.53846153846153,73.84615384615384,76.15384615384616,78.46153846153845,80.76923076923077,83.07692307692307,85.38461538461539,87.6923076923077,90.0,94.28571428571429,98.57142857142857,102.85714285714286,107.14285714285714,111.42857142857143,115.71428571428572,120.0,126.0,132.0,138.0,144.0,150.0,157.5,165.0,172.5,180.0,190.0,200.0,210.0,225.0,240.0,255.0,270.0,285.0,300,330.0,345.0,360,390,420,450,480,510,540,570,600,630,690,720,750,780,810,870,900,960,990,1020,1080,1110,1140,1170,1200,1260,1290,1320.0,1335.0,1350,1440
+		// transmission percentiles at 1% resolution
+		// NOT by type of network
+
+	}; // 10% chance, 20% chance, and so on
+	for (size_t i = 0;i < 99;++i) {
+		if (duration <= transmission_prob[i]) {
+			return 3.12 * /*0.5 +*/ ( (((1.0 * i) + 1.0) / 99.0 ) );
+		}
+	}
+	return 3.12; // 1.5; // max risk
+}

@@ -331,6 +331,15 @@ int discrete_draw( int n, double *p )
 }
 
 /*****************************************************************************************
+*  Name:		uniform_draw
+*  Description: Draws randomly from an equally likely set of data
+******************************************************************************************/
+double uniform_draw( int n, double *p )
+{
+	return p[(int)floor(gsl_ran_flat( rng, 0.0, n))];
+}
+
+/*****************************************************************************************
 *  Name:		normalize_array
 *  Description: normalizes an array by the the sum of the elements
 ******************************************************************************************/

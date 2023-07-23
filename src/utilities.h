@@ -48,6 +48,7 @@ void geometric_draw_list( int*, int, double );
 void gamma_rate_curve( double*, int, double, double, double );
 int negative_binomial_draw( double, double );
 int discrete_draw( int, double* );
+double uniform_draw( int, double* );
 void normalize_array( double*, int );
 void copy_array( double*, double*, int );
 void copy_normalize_array( double*, double*, int );

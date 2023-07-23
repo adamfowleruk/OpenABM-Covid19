@@ -1073,7 +1073,7 @@ class Model:
         events = []
 
         for idx in range(0,summary.count):
-            newEvent = ContactEvent(next.source_id,next.contact_id,next.day,(1 == next.was_infected),next.network_id)
+            newEvent = ContactEvent(next.source_id,next.contact_id,next.day,(1 == next.was_infected),next.network_id, next.duration_minutes, next.risk_threshold, next.risk_evaluation, next.susceptibility)
             events.append(newEvent)
 
             next = next.next
@@ -1394,10 +1394,11 @@ class Model:
         infection_counts = covid19.intArray(n_total)
         vaccine_statuses = covid19.shortArray(n_total)
         quarantine_statuses = covid19.shortArray(n_total)
+        original_hazards = covid19.doubleArray(n_total)
         
         n_total = covid19.get_individuals(
             self.c_model, ids, statuses, age_groups, occupation_networks, 
-            house_ids, infection_counts, vaccine_statuses,quarantine_statuses)
+            house_ids, infection_counts, vaccine_statuses, quarantine_statuses, original_hazards)
         
         list_ids = [None]*n_total
         list_statuses = [None]*n_total
@@ -1407,6 +1408,7 @@ class Model:
         list_infection_counts = [None]*n_total
         list_vaccine_statuses = [None]*n_total
         list_quarantine_statuses = [None]*n_total
+        list_original_hazards = [None]*n_total
         
         for idx in range(n_total):
             list_ids[idx] = ids[idx]
@@ -1417,6 +1419,7 @@ class Model:
             list_infection_counts[idx] = infection_counts[idx]
             list_vaccine_statuses[idx] = vaccine_statuses[idx]
             list_quarantine_statuses[idx] = quarantine_statuses[idx]
+            list_original_hazards[idx] = original_hazards[idx]
         
         df_popn = pd.DataFrame( {
             'ID': list_ids, 
@@ -1426,7 +1429,8 @@ class Model:
             'house_no': list_house_ids,
             'infection_count' : list_infection_counts,
             'vaccine_status' : list_vaccine_statuses,
-            'quarantine_statuses' : list_quarantine_statuses
+            'quarantine_statuses' : list_quarantine_statuses, # TODO this name should be singular - will it break others' code?
+            'original_hazard' : list_original_hazards
         })
         
         return df_popn

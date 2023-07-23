@@ -192,9 +192,14 @@ void transmit_virus_by_type(
 						// Note by default the above returns 0.0 for duration and 1.0 for duration hazard, respectively
 
 						hazard_rate = contact_hazard * network_mult;
-						interaction->individual->hazard[ strain_idx ] -= hazard_rate;
+
+						// Set CE threshold and score before we decrement the hazard
+						ce->susceptibility = interaction->individual->original_hazard[ strain_idx ];
 						ce->risk_threshold = interaction->individual->hazard[ strain_idx ];
 						ce->risk_evaluation = hazard_rate;
+
+						// Now reduce the individuals current hazard rate
+						interaction->individual->hazard[ strain_idx ] -= hazard_rate;
 
 						if( interaction->individual->hazard[ strain_idx ] < 0 )
 						{

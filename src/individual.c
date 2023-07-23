@@ -75,6 +75,7 @@ void initialize_individual(
 		indiv->infectiousness_multiplier = 1;
 	}
 
+	indiv->original_hazard    = calloc( params->max_n_strains, sizeof( float ) );
 	indiv->hazard             = calloc( params->max_n_strains, sizeof( float ) );
 	indiv->immune_full        = calloc( params->max_n_strains, sizeof( short ) );
 	indiv->immune_to_symptoms = calloc( params->max_n_strains, sizeof( short ) );
@@ -155,6 +156,7 @@ void initialize_hazard(
 		if( indiv->immune_full[ idx ] == current_time || current_time == 0 )
 		{
 			indiv->hazard[idx] = gsl_ran_exponential( rng, 1.0 ) / params->adjusted_susceptibility[indiv->age_group];
+			indiv->original_hazard[idx] = indiv->hazard[idx];
 			indiv->immune_full[ idx ] = NO_IMMUNITY;
 		}
 }
@@ -311,6 +313,7 @@ void set_immune( individual *indiv, short strain_idx, short time_until, short im
 	{
 		indiv->immune_full[ strain_idx ] = max( indiv->immune_full[ strain_idx ], time_until );
 		indiv->hazard[ strain_idx ]      = -1;
+		indiv->original_hazard[ strain_idx ]      = -1;
 	} else if( immune_type == IMMUNE_SYMPTOMS  )
 	{
 		indiv->immune_to_symptoms[ strain_idx ] = max( indiv->immune_to_symptoms[ strain_idx ], time_until );
@@ -536,6 +539,7 @@ void destroy_individual( individual *indiv )
 	}
 	free( indiv->n_interactions );
 	free( indiv->interactions );
+	free( indiv->original_hazard );
 	free( indiv->hazard );
 	free( indiv->immune_full );
 	free( indiv->immune_to_symptoms );
@@ -587,6 +591,10 @@ void print_individual( model *model, long idx)
 	printf("indiv->base_random_interactions: %d\n", indiv->base_random_interactions );
 	printf("indiv->random_interactions: %d\n", indiv->random_interactions );
 
+	printf("indiv->original_hazard:");
+	for( int strain_idx = 0; strain_idx < model->n_initialised_strains; strain_idx++ )
+		printf(" %f", indiv->original_hazard[strain_idx]);
+	printf("\n");
 	printf("indiv->hazard:");
 	for( int strain_idx = 0; strain_idx < model->n_initialised_strains; strain_idx++ )
 		printf(" %f", indiv->hazard[strain_idx]);

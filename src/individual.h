@@ -35,7 +35,8 @@ struct individual{
 	interaction **interactions;
 
 	short status;
-	float *hazard;
+	float *original_hazard; // Original hazard budget (susceptibility) when the individual was created (per strain)
+	float *hazard; // current remaining hazard budget (per strain)
 	float infectiousness_multiplier;
 	float compliance_factor;
 	event *current_disease_event;

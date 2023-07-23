@@ -28,10 +28,13 @@ struct contact_event{
 
     // TODO add strain to this contact event for multi-strain/disease evaluations
 
-    // Theses are INTERNAL model risk evaluations, and not intervention risk evaluation levels
-    double risk_threshold;
+    // These are INTERNAL model risk evaluations, and not intervention risk evaluation levels
+    double risk_threshold; // threshold (current hazard budget) for infection comparison
     double risk_evaluation;
     // Note if risk_evaluation > risk_threshold then was_infected will be true
+
+    // The INTERNAL model original hazard (susceptibility) of the individual at the start of the simulation
+    double susceptibility;
 
     // The following are reportable components of the above risk_evaluation value
     // The following are only set for a duration risk evaluation model

@@ -200,7 +200,8 @@ long get_individuals(
 	long *house_ids,
 	int *infection_counts,
 	short *vaccine_statuses,
-  short *quarantine_statuses
+	short *quarantine_statuses,
+	double *original_hazards
 )
 {
 	long n_total = model->params->n_total;
@@ -215,6 +216,7 @@ long get_individuals(
 		infection_counts[ idx ] = count_infection_events( &(model->population[ idx ]) );
 		vaccine_statuses[ idx ] = model->population[ idx ].vaccine_status;
 		quarantine_statuses[ idx ] = model->population[ idx ].quarantined;
+		original_hazards[ idx ] = model->population[ idx ].original_hazard[0]; // TODO support more strains
 	}
 	return idx;
 }
