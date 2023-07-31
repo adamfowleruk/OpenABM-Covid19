@@ -1065,9 +1065,9 @@ class Model:
                     raise ParameterException( f"Cross-immunity probability must be in the interval [0,1]")
                 covid19.set_cross_immunity_probability( self.c_model, caught_idx, conferred_idx, probability )
 
-    def get_contact_events(self):
+    def get_contact_events(self, since):
 
-        summary = covid19.get_contact_events( self.c_model )
+        summary = covid19.get_contact_events( self.c_model, since )
         next = summary.first
 
         events = []

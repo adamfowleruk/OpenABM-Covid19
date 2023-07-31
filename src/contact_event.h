@@ -56,6 +56,6 @@ struct contact_events_summary{
 /******************************  Functions  *****************************/
 /************************************************************************/
 
-contact_events_summary* get_contact_events( model* );
+contact_events_summary* get_contact_events( model*, int );
 
 #endif /* CONTACT_EVENT_H_ */

@@ -15,10 +15,11 @@
 
 /*****************************************************************************************
 *  Name:		get_contact_events
-*  Description: Return all contact events (Interaction instances) in the model.
+*  Description: Return all contact events (Interaction instances) in the model since a
+*               specified time (inclusive).
 *               Caller owns the pointer.
 ******************************************************************************************/
-contact_events_summary* get_contact_events( model* model )
+contact_events_summary* get_contact_events( model* model, int since )
 {
 	// long idx, jdx, n_infected;
 	// int day, n_interaction, t_infect;
@@ -150,9 +151,14 @@ contact_events_summary* get_contact_events( model* model )
     // }
 
     last = model->contact_events;
-    first = last;
+    first = NULL;
     while (NULL != last) {
-        ++count;
+        if (last->day >= since) {
+            if (NULL == first) {
+                first = last;
+            }
+            ++count;
+        }
         last = last->next;
     }
 
